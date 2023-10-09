@@ -2,12 +2,13 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 8000;
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser'); // Import the body-parser middleware
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const uri = process.env.MONGODB_URI;
 
 mongoose.connect(uri, {
+  dbName: 'pharmacyDB',
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
