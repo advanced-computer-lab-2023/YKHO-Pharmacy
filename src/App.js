@@ -19,13 +19,22 @@ db.once('open', () => {
   console.log('Connected to MongoDB Atlas');
 });
 
-const medicineController = require('./controller/medicineController');
+//controller
+const adminController = require('./controller/adminController');
+const patientController = require('./controller/patientController');
+const pharmacistController = require('./controller/pharmacistController');
 
 app.use(express.json());
 
-app.get('/medicines', medicineController.getMedicines);
+//admin
+app.get('/medicines', adminController.getMedicines);
 
-app.post('/createMedicines', medicineController.createMedicine);
+//patient
+app.get('/medicines', patientController.getMedicines);
+
+//pharmacist
+app.get('/medicines', patientController.getMedicines);
+app.post('/createMedicines', pharmacistController.createMedicine);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
