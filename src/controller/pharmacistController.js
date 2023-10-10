@@ -59,5 +59,38 @@ exports.searchMedicines = async (req, res) => {
   }
 };
 
+exports.getMedicinesWithDetailsAndSales = async (req, res) => {
+  try {
+    const medicines = await Medicine.find({}, { _id: 0, detail: 1, sales: 1 });
+    res.json(medicines);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.editMedicineDetailsAndPrice = async (req, res) => {
+  try {
+    const { name, detail, price } = req.body;
+    const medicine = await Medicine.findOne({ name });
+
+    if (!medicine) {
+      return res.status(404).json({ error: 'Medicine not found' });
+    }
+
+    medicine.detail = detail;
+    medicine.price = price;
+
+    await medicine.save();
+
+    res.json({
+      message: 'Medicine details and price updated successfully',
+      medicine,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 // Other routes for CRUD operations...
 

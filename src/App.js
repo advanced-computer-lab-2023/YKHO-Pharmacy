@@ -39,6 +39,8 @@ app.get('/searchMedicines', patientController.searchMedicines);
 app.get('/medicines', patientController.getMedicines);
 app.post('/createMedicines', pharmacistController.createMedicine);
 app.get('/searchMedicines', pharmacistController.searchMedicines);
+app.get('/getDetailSales', pharmacistController.getMedicinesWithDetailsAndSales)
+app.post('/editMedicine', pharmacistController.editMedicineDetailsAndPrice)
 
 
 app.listen(port, () => {
