@@ -23,6 +23,7 @@ db.once('open', () => {
 const adminController = require('./controller/adminController');
 const patientController = require('./controller/patientController');
 const pharmacistController = require('./controller/pharmacistController');
+const guestController = require('./controller/guestController');
 
 app.use(express.json());
 
@@ -45,6 +46,9 @@ app.get('/searchMedicines', pharmacistController.searchMedicines);
 app.get('/getDetailSales', pharmacistController.getMedicinesWithDetailsAndSales)
 app.post('/editMedicine', pharmacistController.editMedicineDetailsAndPrice)
 
+//guest
+app.post('/createPatient', guestController.createPatient);
+app.post('/createRequest', guestController.createRequest);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
