@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Registration</title>
+</head>
+<body>
+    <h1>Patient Registration</h1>
+    <form action="/guest/createPatient" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" name="username" required><br>
+
+        <label for="name">Name:</label>
+        <input type="text" name="name" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" required><br>
+
+        <label for="dateOfBirth">Date of Birth:</label>
+        <input type="date" name="dateOfBirth" required><br>
+
+        <label for="gender">Gender:</label>
+        <select name="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select><br>
+
+
+        <label for="mobileNumber">Mobile Number:</label>
+        <input type="tel" name="mobileNumber" required><br>
+
+        <h2>Emergency Contact</h2>
+        <label for="emergencyContact[fullName]">Full Name:</label>
+        <input type="text" name="emergencyContact[fullName]" required><br>
+
+        <label for="emergencyContact[mobileNumber]">Mobile Number:</label>
+        <input type="tel" name="emergencyContact[mobileNumber]" required><br>
+
+        <label for="emergencyContact[relationship]">Relation to the Patient:</label>
+        <input type="text" name="emergencyContact[relationship]" required><br>
+
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>

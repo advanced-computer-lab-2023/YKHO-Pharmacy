@@ -3,7 +3,7 @@ const Medicine = require('../model/medicine');
 exports.getMedicines = async (req, res) => {
   try {
     const medicines = await Medicine.find();
-    res.json(medicines);
+    res.render('pharmacist/medicines', { medicines });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -19,12 +19,19 @@ exports.createMedicine = async (req, res) => {
       detail,
       quantity,
       sales,
+      price,
     } = req.body;
 
-    const existingMedicine = await Medicine.findOne({ name });
+    let existingMedicine = await Medicine.findOne({ name });
 
     if (existingMedicine) {
-      return res.status(400).json({ error: 'Medicine already exists' });
+      existingMedicine.quantity = parseInt(existingMedicine.quantity) + parseInt(quantity);
+      await existingMedicine.save();
+
+      return res.json({
+        message: 'Medicine quantity updated successfully',
+        medicine: existingMedicine,
+      });
     }
 
     const newMedicine = new Medicine({
@@ -35,6 +42,7 @@ exports.createMedicine = async (req, res) => {
       detail,
       quantity,
       sales,
+      price,
     });
 
     await newMedicine.save();
@@ -51,9 +59,9 @@ exports.createMedicine = async (req, res) => {
 exports.searchMedicines = async (req, res) => {
   try {
     const { search } = req.query;
-    const searchRegex = new RegExp(search, 'i'); 
+    const searchRegex = new RegExp(search, 'i');
     const medicines = await Medicine.find({ name: searchRegex });
-    res.json(medicines);
+    res.render('pharmacist/medicines', { medicines });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -91,6 +99,20 @@ exports.editMedicineDetailsAndPrice = async (req, res) => {
   }
 };
 
+exports.filterMedicinesByMedUse = async (req, res) => {
+  try {
+    const { medUse } = req.query;
+
+    if (!medUse) {
+      return res.status(400).json({ error: 'Please provide a "medUse" filter' });
+    }
+
+    const medicines = await Medicine.find({ medUse: medUse });
+    res.render('pharmacist/medicines', { medicines });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 // Other routes for CRUD operations...
 

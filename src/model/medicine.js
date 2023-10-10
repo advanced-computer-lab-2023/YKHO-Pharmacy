@@ -7,7 +7,8 @@ const medicineSchema = new mongoose.Schema({
   medUse: String,
   detail: String,
   quantity: String,
-  sales: String 
+  sales: String,
+  price: String
 });
 
 module.exports = mongoose.model('Medicine', medicineSchema);

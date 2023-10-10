@@ -36,13 +36,13 @@ exports.createPatient = async (req, res) => {
     await newPatient.save();
 
     res.status(201).json({
-      message: 'Patient created successfully',
-      patient: newPatient,
+      message: 'Patient created successfully'
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.createRequest = async (req, res) => {
     try {
@@ -71,10 +71,17 @@ exports.createRequest = async (req, res) => {
       await newRequest.save();
   
       res.status(201).json({
-        message: 'Registration request created successfully',
-        request: newRequest,
+        message: 'Registration request created successfully'
       });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
+  };
+
+  exports.register = async (req, res) => {
+    res.render('guest/createPatient');
+  };
+
+  exports.request = async (req, res) => {
+    res.render('guest/createRequest');
   };
