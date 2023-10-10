@@ -2,6 +2,7 @@ const Medicine = require('../model/medicine');
 const Administrator = require('../model/administrator');
 const Pharmacist = require('../model/pharmacist');
 const Patient = require('../model/patient');
+const RegRequest = require('../model/regRequest');
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -116,5 +117,13 @@ exports.getPatient = async (req, res) => {
   }
 };
 
+exports.getRequests = async (req, res) => {
+  try {
+    const regRequest = await RegRequest.find();
+    res.json(regRequest);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 // Other routes for CRUD operations...

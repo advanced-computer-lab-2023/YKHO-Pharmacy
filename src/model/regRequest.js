@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const pharmacistSchema = new mongoose.Schema({
+const regRequestSchema = new mongoose.Schema({
   username: String,
   name: String,
   email: String,
@@ -11,4 +11,4 @@ const pharmacistSchema = new mongoose.Schema({
   educationalBackground: String
 });
 
-module.exports = mongoose.model('regRequest', pharmacistSchema);
+module.exports = mongoose.model('regRequest', regRequestSchema);
