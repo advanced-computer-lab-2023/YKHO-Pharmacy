@@ -9,34 +9,12 @@ exports.getMedicines = async (req, res) => {
   }
 };
 
-exports.createMedicine = async (req, res) => {
+exports.searchMedicines = async (req, res) => {
   try {
-    const {
-      name,
-      dosage,
-      description,
-      medUse,
-      detail,
-      quantity,
-      sales,
-    } = req.body;
-
-    const newMedicine = new Medicine({
-      name,
-      dosage,
-      description,
-      medUse,
-      detail,
-      quantity,
-      sales,
-    });
-
-    await newMedicine.save();
-
-    res.status(201).json({
-      message: 'Medicine added successfully',
-      medicine: newMedicine,
-    });
+    const { search } = req.query;
+    const searchRegex = new RegExp(search, 'i'); 
+    const medicines = await Medicine.find({ name: searchRegex });
+    res.json(medicines);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

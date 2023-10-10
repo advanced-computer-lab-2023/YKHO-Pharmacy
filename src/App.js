@@ -28,13 +28,16 @@ app.use(express.json());
 
 //admin
 app.get('/medicines', adminController.getMedicines);
+app.get('/searchMedicines', adminController.searchMedicines)
 
 //patient
 app.get('/medicines', patientController.getMedicines);
+app.get('/searchMedicines', patientController.searchMedicines)
 
 //pharmacist
 app.get('/medicines', patientController.getMedicines);
 app.post('/createMedicines', pharmacistController.createMedicine);
+app.get('/searchMedicines', pharmacistController.searchMedicines)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
