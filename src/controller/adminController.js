@@ -1,6 +1,7 @@
 const Medicine = require('../model/medicine');
 const Administrator = require('../model/administrator');
 const Pharmacist = require('../model/pharmacist');
+const Patient = require('../model/patient');
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -43,5 +44,77 @@ exports.addAdministrator = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.removePharmacist = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Check if pharmacist exists
+    const pharmacist = await Pharmacist.findOne({ username });
+    if (!pharmacist) {
+      return res.status(404).json({ message: 'Pharmacist not found' });
+    }
+
+    // Remove pharmacist from the system
+    await Pharmacist.findOneAndDelete({ username });
+
+
+    res.json({ message: 'Pharmacist removed successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.removePatient = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Check if patient exists
+    const patient = await Patient.findOne({ username });
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    // Remove patient from the system
+    await Patient.findOneAndDelete({ username });
+
+    res.json({ message: 'Patient removed successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getPharmacist = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Check if pharmacist exists
+    const pharmacist = await Pharmacist.findOne({ username });
+    if (!pharmacist) {
+      return res.status(404).json({ message: 'Pharmacist not found' });
+    }
+
+    res.json(pharmacist);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getPatient = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Check if patient exists
+    const patient = await Patient.findOne({ username });
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    res.json(patient);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 // Other routes for CRUD operations...
