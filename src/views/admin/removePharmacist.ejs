@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Remove Pharmacist</title>
+  <style>
+    /* Add your CSS styles here */
+  </style>
+</head>
+<body>
+  <h1>Remove Pharmacist</h1>
+  <form id="remove-pharmacist-form">
+    <label>
+      Username:
+      <input type="text" id="username-input" />
+    </label>
+    <br />
+    <button type="submit">Remove Pharmacist</button>
+  </form>
+  <p id="message"></p>
+
+  <script>
+    // Add your JavaScript code here
+    const form = document.getElementById('remove-pharmacist-form');
+    const usernameInput = document.getElementById('username-input');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const username = usernameInput.value;
+
+      fetch('/admin/removePharmacist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          message.textContent = data.message;
+          usernameInput.value = '';
+        })
+        .catch((error) => console.error(error));
+    });
+  </script>
+</body>
+</html>

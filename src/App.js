@@ -36,8 +36,16 @@ app.use(express.json());
 
 //admin
 app.get('/admin/adminHome',adminController.home)
+
+app.get('/admin/addadministrator', adminController.adminAdd);
 app.post('/admin/addadministrator', adminController.addAdministrator);
+
+app.get('/admin/removePharmacist', adminController.pharmacistRemove);
+app.post('/admin/removePharmacist', adminController.removePharmacist);
+
+app.get('/admin/removePatient', adminController.patientRemove);
 app.post('/admin/removePatient', adminController.removePatient);
+
 app.post('/admin/getPatient', adminController.getPatient);
 app.post('/admin/getPharmacist', adminController.getPharmacist);
 app.get('/admin/getRequests', adminController.getRequests);

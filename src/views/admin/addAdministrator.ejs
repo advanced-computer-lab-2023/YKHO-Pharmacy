@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Administrator</title>
+  <style>
+    /* Add your CSS styles here */
+  </style>
+</head>
+<body>
+  <h1>Add Administrator</h1>
+  <form id="add-administrator-form">
+    <label>
+      Username:
+      <input type="text" id="username-input" />
+    </label>
+    <br />
+    <label>
+      Password:
+      <input type="password" id="password-input" />
+    </label>
+    <br />
+    <button type="submit" id="add-administrator-button">Add Administrator</button>
+  </form>
+  <p id="message"></p>
+
+  <script>
+    // Add your JavaScript code here
+    const form = document.getElementById('add-administrator-form');
+    const usernameInput = document.getElementById('username-input');
+    const passwordInput = document.getElementById('password-input');
+    const message = document.getElementById('message');
+    const addButton = document.getElementById('add-administrator-button');
+
+    addButton.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      const username = usernameInput.value;
+      const password = passwordInput.value;
+
+      addAdministrator(username, password);
+    });
+
+    function addAdministrator(username, password) {
+      fetch('/admin/addadministrator', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          message.textContent = data.message;
+          usernameInput.value = '';
+          passwordInput.value = '';
+        })
+        .catch((error) => console.error(error));
+    }
+  </script>
+</body>
+</html>

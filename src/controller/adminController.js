@@ -141,8 +141,21 @@ exports.filterMedicinesByMedUse = async (req, res) => {
   }
 };
 
+
 exports.home = async (req, res) => {
   res.render('admin/adminHome');
+};
+
+exports.adminAdd = async (req, res) => {
+  res.render('admin/addadministrator');
+};
+
+exports.pharmacistRemove = async (req, res) => {
+  res.render('admin/removePharmacist');
+};
+
+exports.patientRemove = async (req, res) => {
+  res.render('admin/removePatient');
 };
 
 // Other routes for CRUD operations...
