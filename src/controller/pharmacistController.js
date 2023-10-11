@@ -69,8 +69,8 @@ exports.searchMedicines = async (req, res) => {
 
 exports.getMedicinesWithDetailsAndSales = async (req, res) => {
   try {
-    const medicines = await Medicine.find({}, { _id: 0, detail: 1, sales: 1 });
-    res.json(medicines);
+    const medicines = await Medicine.find({}, { _id: 0, name: 1 ,detail: 1, sales: 1 });
+    res.render('pharmacist/getDetailSales', { medicines });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -116,6 +116,14 @@ exports.filterMedicinesByMedUse = async (req, res) => {
 
 exports.home = async (req, res) => {
   res.render('pharmacist/pharmacistHome');
+};
+
+exports.create = async (req, res) => {
+  res.render('pharmacist/createMedicines');
+};
+
+exports.edit = async (req, res) => {
+  res.render('pharmacist/editMedicine');
 };
 
 // Other routes for CRUD operations...

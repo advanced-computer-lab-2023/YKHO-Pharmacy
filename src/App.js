@@ -73,6 +73,8 @@ app.get('/pharmacist/searchMedicines', pharmacistController.searchMedicines);
 app.get('/pharmacist/getDetailSales', pharmacistController.getMedicinesWithDetailsAndSales)
 app.post('/pharmacist/editMedicine', pharmacistController.editMedicineDetailsAndPrice)
 app.get('/pharmacist/medicines/filter', pharmacistController.filterMedicinesByMedUse);
+app.get('/pharmacist/createMedicines',pharmacistController.create);
+app.get('/pharmacist/editMedicine',pharmacistController.edit);
 
 //guest
 app.get('/guest/guestHome',guestController.home)

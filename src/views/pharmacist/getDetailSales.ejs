@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medicine List</title>
+</head>
+<body>
+    <h1>Medicine List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Detail</th>
+                <th>Sales</th>
+<!-- Add more table headers for other fields if needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <% medicines.forEach(medicine => { %>
+                <tr>
+                    <td><%= medicine.name %></td>
+                    <td><%= medicine.detail %></td>
+                    <td><%= medicine.sales %></td>
+                    <!-- Add more <td> elements for other fields if needed -->
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>
