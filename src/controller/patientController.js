@@ -34,3 +34,7 @@ exports.filterMedicinesByMedUse = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.home = async (req, res) => {
+  res.render('patient/patientHome');
+};

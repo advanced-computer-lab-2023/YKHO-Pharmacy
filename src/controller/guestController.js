@@ -85,3 +85,7 @@ exports.createRequest = async (req, res) => {
   exports.request = async (req, res) => {
     res.render('guest/createRequest');
   };
+
+  exports.home = async (req, res) => {
+    res.render('guest/guestHome');
+  };

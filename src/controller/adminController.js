@@ -141,4 +141,8 @@ exports.filterMedicinesByMedUse = async (req, res) => {
   }
 };
 
+exports.home = async (req, res) => {
+  res.render('admin/adminHome');
+};
+
 // Other routes for CRUD operations...

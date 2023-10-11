@@ -35,6 +35,7 @@ const guestController = require('./controller/guestController');
 app.use(express.json());
 
 //admin
+app.get('/admin/adminHome',adminController.home)
 app.post('/admin/addadministrator', adminController.addAdministrator);
 app.post('/admin/removePatient', adminController.removePatient);
 app.post('/admin/getPatient', adminController.getPatient);
@@ -45,11 +46,13 @@ app.get('/admin/searchMedicines', adminController.searchMedicines);
 app.get('/admin/medicines/filter', adminController.filterMedicinesByMedUse);
 
 //patient
+app.get('/patient/patientHome',patientController.home)
 app.get('/patient/medicines', patientController.getMedicines);
 app.get('/patient/searchMedicines', patientController.searchMedicines);
 app.get('/patient/medicines/filter', patientController.filterMedicinesByMedUse);
 
 //pharmacist
+app.get('/pharmacist/pharmacistHome',pharmacistController.home)
 app.get('/pharmacist/medicines', pharmacistController.getMedicines);
 app.post('/pharmacist/createMedicines', pharmacistController.createMedicine);
 app.get('/pharmacist/searchMedicines', pharmacistController.searchMedicines);
@@ -58,10 +61,17 @@ app.post('/pharmacist/editMedicine', pharmacistController.editMedicineDetailsAnd
 app.get('/pharmacist/medicines/filter', pharmacistController.filterMedicinesByMedUse);
 
 //guest
+app.get('/guest/guestHome',guestController.home)
 app.post('/guest/createPatient', guestController.createPatient);
 app.post('/guest/createRequest', guestController.createRequest);
 app.get('/guest/createPatient', guestController.register);
 app.get('/guest/createRequest', guestController.request);
+
+//home
+app.get('/', (req, res) => {
+  res.render('home');
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

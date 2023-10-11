@@ -114,5 +114,8 @@ exports.filterMedicinesByMedUse = async (req, res) => {
   }
 };
 
-// Other routes for CRUD operations...
+exports.home = async (req, res) => {
+  res.render('pharmacist/pharmacistHome');
+};
 
+// Other routes for CRUD operations...
