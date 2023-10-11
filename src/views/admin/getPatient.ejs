@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Get Patient</title>
+  <style>
+    /* Add your CSS styles here */
+  </style>
+</head>
+<body>
+  <h1>Get Patient</h1>
+  <form id="get-patient-form">
+    <label>
+      Username:
+      <input type="text" id="username-input" />
+    </label>
+    <br />
+    <button type="submit">Get Patient</button>
+  </form>
+  <p id="message"></p>
+  <pre id="patient-details"></pre>
+
+  <script>
+    // Add your JavaScript code here
+    const form = document.getElementById('get-patient-form');
+    const usernameInput = document.getElementById('username-input');
+    const message = document.getElementById('message');
+    const pharmacistDetails = document.getElementById('patient-details');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const username = usernameInput.value;
+
+      fetch('/admin/getPatient', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message) {
+            message.textContent = data.message;
+            pharmacistDetails.textContent = '';
+          } else {
+            message.textContent = '';
+            pharmacistDetails.textContent = JSON.stringify(data, null, 2);
+          }
+          usernameInput.value = '';
+        })
+        .catch((error) => console.error(error));
+    });
+  </script>
+</body>
+</html>

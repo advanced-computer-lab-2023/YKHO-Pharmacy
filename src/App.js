@@ -46,10 +46,16 @@ app.post('/admin/removePharmacist', adminController.removePharmacist);
 app.get('/admin/removePatient', adminController.patientRemove);
 app.post('/admin/removePatient', adminController.removePatient);
 
+app.get('/admin/getPatient', adminController.patientGet);
 app.post('/admin/getPatient', adminController.getPatient);
+
+app.get('/admin/getPharmacist', adminController.pharmacistGet);
 app.post('/admin/getPharmacist', adminController.getPharmacist);
+
 app.get('/admin/getRequests', adminController.getRequests);
+
 app.get('/admin/medicines', adminController.getMedicines);
+
 app.get('/admin/searchMedicines', adminController.searchMedicines);
 app.get('/admin/medicines/filter', adminController.filterMedicinesByMedUse);
 

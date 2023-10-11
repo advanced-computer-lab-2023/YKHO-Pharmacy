@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Requests List</title>
+</head>
+<body>
+    <h1>Requests List</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Date of Birth</th>
+                <th>Hourly Rate</th>
+                <th>Affiliation</th>
+                <th>Educational Background</th>
+                <!-- Add more table headers for other fields if needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <% getRequests.forEach(regRequest => { %>
+                <tr>
+                    <td><%= regRequest.username %></td>
+                    <td><%= regRequest.name %></td>
+                    <td><%= regRequest.email %></td>
+                    <td><%= regRequest.password %></td>
+                    <td><%= regRequest.dateOfBirth %></td>
+                    <td><%= regRequest.hourlyRate %></td>
+                    <td><%= regRequest.affiliation %></td>
+                    <td><%= regRequest.educationalBackground %></td>
+                    <!-- Add more <td> elements for other fields if needed -->
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>

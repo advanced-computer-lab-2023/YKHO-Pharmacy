@@ -119,8 +119,8 @@ exports.getPatient = async (req, res) => {
 
 exports.getRequests = async (req, res) => {
   try {
-    const regRequest = await RegRequest.find();
-    res.json(regRequest);
+    const getRequests = await RegRequest.find();
+    res.render('admin/getRequests', { getRequests });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -150,8 +150,16 @@ exports.adminAdd = async (req, res) => {
   res.render('admin/addadministrator');
 };
 
+exports.pharmacistGet = async (req, res) => {
+  res.render('admin/getPharmacist');
+};
+
 exports.pharmacistRemove = async (req, res) => {
   res.render('admin/removePharmacist');
+};
+
+exports.patientGet = async (req, res) => {
+  res.render('admin/getPatient');
 };
 
 exports.patientRemove = async (req, res) => {
