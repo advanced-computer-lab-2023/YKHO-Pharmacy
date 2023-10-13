@@ -2,34 +2,30 @@
 <html>
 <head>
   <title>Get Patient</title>
-  <style>
-    /* Add your CSS styles here */
-  </style>
 </head>
 <body>
   <h1>Get Patient</h1>
-  <form id="get-patient-form">
+  <form id="patientform">
     <label>
       Username:
-      <input type="text" id="username-input" />
+      <input type="text" id="username" />
     </label>
     <br />
     <button type="submit">Get Patient</button>
   </form>
   <p id="message"></p>
-  <pre id="patient-details"></pre>
+  <pre id="patientdata"></pre>
 
   <script>
-    // Add your JavaScript code here
-    const form = document.getElementById('get-patient-form');
-    const usernameInput = document.getElementById('username-input');
+    const form = document.getElementById('patientform');
+    const un = document.getElementById('username');
     const message = document.getElementById('message');
-    const pharmacistDetails = document.getElementById('patient-details');
+    const patientDetails = document.getElementById('patientdata');
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
 
-      const username = usernameInput.value;
+      const username = un.value;
 
       fetch('/admin/getPatient', {
         method: 'POST',
@@ -42,12 +38,12 @@
         .then((data) => {
           if (data.message) {
             message.textContent = data.message;
-            pharmacistDetails.textContent = '';
+            patientDetails.textContent = '';
           } else {
             message.textContent = '';
-            pharmacistDetails.textContent = JSON.stringify(data, null, 2);
+            patientDetails.textContent = JSON.stringify(data);
           }
-          usernameInput.value = '';
+          un.value = '';
         })
         .catch((error) => console.error(error));
     });

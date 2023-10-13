@@ -57,6 +57,7 @@ app.get('/admin/getRequests', adminController.getRequests);
 app.get('/admin/medicines', adminController.getMedicines);
 
 app.get('/admin/searchMedicines', adminController.searchMedicines);
+
 app.get('/admin/medicines/filter', adminController.filterMedicinesByMedUse);
 
 //patient
@@ -68,20 +69,27 @@ app.get('/patient/medicines/filter', patientController.filterMedicinesByMedUse);
 //pharmacist
 app.get('/pharmacist/pharmacistHome',pharmacistController.home)
 app.get('/pharmacist/medicines', pharmacistController.getMedicines);
-app.post('/pharmacist/createMedicines', pharmacistController.createMedicine);
-app.get('/pharmacist/searchMedicines', pharmacistController.searchMedicines);
-app.get('/pharmacist/getDetailSales', pharmacistController.getMedicinesWithDetailsAndSales)
-app.post('/pharmacist/editMedicine', pharmacistController.editMedicineDetailsAndPrice)
-app.get('/pharmacist/medicines/filter', pharmacistController.filterMedicinesByMedUse);
+
 app.get('/pharmacist/createMedicines',pharmacistController.create);
+app.post('/pharmacist/createMedicines', pharmacistController.createMedicine);
+
+app.get('/pharmacist/searchMedicines', pharmacistController.searchMedicines);
+
+app.get('/pharmacist/getDetailSales', pharmacistController.getMedicinesWithDetailsAndSales)
+
+app.get('/pharmacist/medicines/filter', pharmacistController.filterMedicinesByMedUse);
+
 app.get('/pharmacist/editMedicine',pharmacistController.edit);
+app.post('/pharmacist/editMedicine', pharmacistController.editMedicineDetailsAndPrice)
 
 //guest
 app.get('/guest/guestHome',guestController.home)
-app.post('/guest/createPatient', guestController.createPatient);
-app.post('/guest/createRequest', guestController.createRequest);
+
 app.get('/guest/createPatient', guestController.register);
+app.post('/guest/createPatient', guestController.createPatient);
+
 app.get('/guest/createRequest', guestController.request);
+app.post('/guest/createRequest', guestController.createRequest);
 
 //home
 app.get('/', (req, res) => {

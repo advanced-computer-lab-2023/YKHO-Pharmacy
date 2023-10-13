@@ -34,10 +34,7 @@ exports.addAdministrator = async (req, res) => {
       return res.status(400).json({ message: 'Username already exists' });
     }
 
-    // Create a new administrator document
     const newAdministrator = new Administrator({ username, password });
-
-    // Save the new administrator to the database
     await newAdministrator.save();
 
     res.status(201).json({ message: 'Administrator added successfully' });
@@ -56,9 +53,7 @@ exports.removePharmacist = async (req, res) => {
       return res.status(404).json({ message: 'Pharmacist not found' });
     }
 
-    // Remove pharmacist from the system
     await Pharmacist.findOneAndDelete({ username });
-
 
     res.json({ message: 'Pharmacist removed successfully' });
   } catch (err) {
@@ -76,7 +71,6 @@ exports.removePatient = async (req, res) => {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
-    // Remove patient from the system
     await Patient.findOneAndDelete({ username });
 
     res.json({ message: 'Patient removed successfully' });
@@ -131,7 +125,7 @@ exports.filterMedicinesByMedUse = async (req, res) => {
     const { medUse } = req.query;
 
     if (!medUse) {
-      return res.status(400).json({ error: 'Please provide a "medUse" filter' });
+      return res.status(400).json({ error: 'No results found.' });
     }
 
     const medicines = await Medicine.find({ medUse: medUse });
@@ -165,5 +159,3 @@ exports.patientGet = async (req, res) => {
 exports.patientRemove = async (req, res) => {
   res.render('admin/removePatient');
 };
-
-// Other routes for CRUD operations...

@@ -2,40 +2,36 @@
 <html>
 <head>
   <title>Add Administrator</title>
-  <style>
-    /* Add your CSS styles here */
-  </style>
 </head>
 <body>
   <h1>Add Administrator</h1>
-  <form id="add-administrator-form">
+  <form id="addadminform">
     <label>
       Username:
-      <input type="text" id="username-input" />
+      <input type="text" id="username" />
     </label>
     <br />
     <label>
       Password:
-      <input type="password" id="password-input" />
+      <input type="password" id="password" />
     </label>
     <br />
-    <button type="submit" id="add-administrator-button">Add Administrator</button>
+    <button type="submit" id="addadminbutton">Add Administrator</button>
   </form>
   <p id="message"></p>
 
   <script>
-    // Add your JavaScript code here
-    const form = document.getElementById('add-administrator-form');
-    const usernameInput = document.getElementById('username-input');
-    const passwordInput = document.getElementById('password-input');
+    const form = document.getElementById('addadminform');
+    const un = document.getElementById('username');
+    const pass = document.getElementById('password');
     const message = document.getElementById('message');
-    const addButton = document.getElementById('add-administrator-button');
+    const addButton = document.getElementById('addadminbutton');
 
     addButton.addEventListener('click', (event) => {
       event.preventDefault();
 
-      const username = usernameInput.value;
-      const password = passwordInput.value;
+      const username = un.value;
+      const password = pass.value;
 
       addAdministrator(username, password);
     });
@@ -51,8 +47,8 @@
         .then((response) => response.json())
         .then((data) => {
           message.textContent = data.message;
-          usernameInput.value = '';
-          passwordInput.value = '';
+          un.value = '';
+          pass.value = '';
         })
         .catch((error) => console.error(error));
     }

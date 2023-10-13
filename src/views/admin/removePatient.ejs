@@ -2,16 +2,13 @@
 <html>
 <head>
   <title>Remove Patient</title>
-  <style>
-    /* Add your CSS styles here */
-  </style>
 </head>
 <body>
   <h1>Remove Patient</h1>
-  <form id="remove-patient-form">
+  <form id="removepatient">
     <label>
       Username:
-      <input type="text" id="username-input" />
+      <input type="text" id="username" />
     </label>
     <br />
     <button type="submit">Remove Patient</button>
@@ -19,15 +16,14 @@
   <p id="message"></p>
 
   <script>
-    // Add your JavaScript code here
-    const form = document.getElementById('remove-patient-form');
-    const usernameInput = document.getElementById('username-input');
+    const form = document.getElementById('removepatient');
+    const un = document.getElementById('username');
     const message = document.getElementById('message');
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
 
-      const username = usernameInput.value;
+      const username = un.value;
 
       fetch('/admin/removePatient', {
         method: 'POST',
@@ -39,7 +35,7 @@
         .then((response) => response.json())
         .then((data) => {
           message.textContent = data.message;
-          usernameInput.value = '';
+          un.value = '';
         })
         .catch((error) => console.error(error));
     });
