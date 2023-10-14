@@ -71,7 +71,7 @@ exports.createRequest = async (req, res) => {
       await newRequest.save();
   
       res.status(201).json({
-        message: 'Registration request created successfully'
+        message: 'Registration request submitted successfully'
       });
     } catch (err) {
       res.status(500).json({ error: err.message });

@@ -26,7 +26,7 @@ db.once('open', () => {
   console.log('Connected to MongoDB Atlas');
 });
 
-//controller
+//controllers
 const adminController = require('./controller/adminController');
 const patientController = require('./controller/patientController');
 const pharmacistController = require('./controller/pharmacistController');
