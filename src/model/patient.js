@@ -1,9 +1,18 @@
 const mongoose = require('mongoose');
 
 const emergencyContactSchema = new mongoose.Schema({
-  fullName: String,
-  mobileNumber: String,
-  relation: String,
+  fullName: {
+    type: String,
+    required: true,
+  },
+  mobileNumber: {
+    type: String,
+    required: true,
+  },
+  relation: {
+    type: String,
+    required: true,
+  },
 });
 
 const patientSchema = new mongoose.Schema({
