@@ -12,6 +12,7 @@ exports.getMedicines = async (req, res) => {
 exports.createMedicine = async (req, res) => {
   try {
     const {
+      image,
       name,
       dosage,
       description,
@@ -35,6 +36,7 @@ exports.createMedicine = async (req, res) => {
     }
 
     const newMedicine = new Medicine({
+      image,
       name,
       dosage,
       description,
@@ -125,5 +127,3 @@ exports.create = async (req, res) => {
 exports.edit = async (req, res) => {
   res.render('pharmacist/editMedicine');
 };
-
-// Other routes for CRUD operations...

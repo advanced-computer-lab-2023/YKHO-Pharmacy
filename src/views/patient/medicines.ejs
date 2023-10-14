@@ -19,6 +19,7 @@
     <table>
         <thead>
             <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Dosage</th>
                 <th>Description</th>
@@ -32,6 +33,7 @@
         <tbody>
             <% medicines.forEach(medicine => { %>
                 <tr>
+                    <td><img src="<%= medicine.image %>" alt="Medicine Image" style="width: 200px; height: 150px;"></td>
                     <td><%= medicine.name %></td>
                     <td><%= medicine.dosage %></td>
                     <td><%= medicine.description %></td>
