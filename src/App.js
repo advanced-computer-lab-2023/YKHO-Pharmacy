@@ -2,8 +2,6 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 8000;
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const ejs = require('ejs');
 
 require('dotenv').config();
 
@@ -26,6 +24,18 @@ db.once('open', () => {
   console.log('Connected to MongoDB Atlas');
 });
 
+const session = require('express-session');
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+}));
+
+//schemas
+const Administrator = require('./model/administrator');
+const Pharmacist = require('./model/pharmacist');
+const Patient = require('./model/patient');
+
 //controllers
 const adminController = require('./controller/adminController');
 const patientController = require('./controller/patientController');
@@ -35,67 +45,96 @@ const guestController = require('./controller/guestController');
 app.use(express.json());
 
 //admin
-app.get('/admin/adminHome',adminController.home)
-
-app.get('/admin/addadministrator', adminController.adminAdd);
+app.get('/admin/adminHome', isAuthenticated, adminController.home)
+app.get('/admin/addadministrator', isAuthenticated, adminController.adminAdd);
 app.post('/admin/addadministrator', adminController.addAdministrator);
-
-app.get('/admin/removePharmacist', adminController.pharmacistRemove);
+app.get('/admin/removePharmacist', isAuthenticated, adminController.pharmacistRemove);
 app.post('/admin/removePharmacist', adminController.removePharmacist);
-
-app.get('/admin/removePatient', adminController.patientRemove);
+app.get('/admin/removePatient', isAuthenticated, adminController.patientRemove);
 app.post('/admin/removePatient', adminController.removePatient);
-
-app.get('/admin/getPatient', adminController.patientGet);
+app.get('/admin/getPatient', isAuthenticated, adminController.patientGet);
 app.post('/admin/getPatient', adminController.getPatient);
-
-app.get('/admin/getPharmacist', adminController.pharmacistGet);
+app.get('/admin/getPharmacist', isAuthenticated, adminController.pharmacistGet);
 app.post('/admin/getPharmacist', adminController.getPharmacist);
-
-app.get('/admin/getRequests', adminController.getRequests);
-
-app.get('/admin/medicines', adminController.getMedicines);
-
-app.get('/admin/searchMedicines', adminController.searchMedicines);
-
-app.get('/admin/medicines/filter', adminController.filterMedicinesByMedUse);
+app.get('/admin/getRequests', isAuthenticated, adminController.getRequests);
+app.get('/admin/medicines', isAuthenticated, adminController.getMedicines);
+app.get('/admin/searchMedicines', isAuthenticated, adminController.searchMedicines);
+app.get('/admin/medicines/filter', isAuthenticated, adminController.filterMedicinesByMedUse);
 
 //patient
-app.get('/patient/patientHome',patientController.home)
-app.get('/patient/medicines', patientController.getMedicines);
-app.get('/patient/searchMedicines', patientController.searchMedicines);
-app.get('/patient/medicines/filter', patientController.filterMedicinesByMedUse);
+app.get('/patient/patientHome', isAuthenticated,patientController.home)
+app.get('/patient/medicines', isAuthenticated, patientController.getMedicines);
+app.get('/patient/searchMedicines', isAuthenticated, patientController.searchMedicines);
+app.get('/patient/medicines/filter', isAuthenticated, patientController.filterMedicinesByMedUse);
 
 //pharmacist
-app.get('/pharmacist/pharmacistHome',pharmacistController.home)
-app.get('/pharmacist/medicines', pharmacistController.getMedicines);
-
-app.get('/pharmacist/createMedicines',pharmacistController.create);
+app.get('/pharmacist/pharmacistHome', isAuthenticated,pharmacistController.home)
+app.get('/pharmacist/medicines', isAuthenticated, pharmacistController.getMedicines);
+app.get('/pharmacist/createMedicines', isAuthenticated,pharmacistController.create);
 app.post('/pharmacist/createMedicines', pharmacistController.createMedicine);
-
-app.get('/pharmacist/searchMedicines', pharmacistController.searchMedicines);
-
-app.get('/pharmacist/getDetailSales', pharmacistController.getMedicinesWithDetailsAndSales)
-
-app.get('/pharmacist/medicines/filter', pharmacistController.filterMedicinesByMedUse);
-
-app.get('/pharmacist/editMedicine',pharmacistController.edit);
+app.get('/pharmacist/searchMedicines', isAuthenticated, pharmacistController.searchMedicines);
+app.get('/pharmacist/getDetailSales', isAuthenticated, pharmacistController.getMedicinesWithDetailsAndSales)
+app.get('/pharmacist/medicines/filter', isAuthenticated, pharmacistController.filterMedicinesByMedUse);
+app.get('/pharmacist/editMedicine', isAuthenticated,pharmacistController.edit);
 app.post('/pharmacist/editMedicine', pharmacistController.editMedicineDetailsAndPrice)
 
 //guest
 app.get('/guest/guestHome',guestController.home)
-
 app.get('/guest/createPatient', guestController.register);
 app.post('/guest/createPatient', guestController.createPatient);
-
 app.get('/guest/createRequest', guestController.request);
 app.post('/guest/createRequest', guestController.createRequest);
 
-//home
+//login
 app.get('/', (req, res) => {
-  res.render('home');
+  res.render('login');
 });
 
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  const admin = await Administrator.findOne({ username });
+
+  if (admin && admin.password === password) {
+    req.session.user = admin;
+    return res.redirect('/admin/adminHome');
+  }
+
+  const patient = await Patient.findOne({ username });
+
+  if (patient && patient.password === password) {
+    req.session.user = patient;
+    return res.redirect('/patient/patientHome');
+  }
+
+  const pharmacist = await Pharmacist.findOne({ username });
+
+  if (pharmacist && pharmacist.password === password) {
+    req.session.user = pharmacist;
+    return res.redirect('/pharmacist/pharmacistHome');
+  }
+
+  res.status(401).json({ message: 'Invalid username or password' });
+});
+
+//logout
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+    }
+    res.redirect('/');
+  });
+});
+
+//authentication
+function isAuthenticated(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    res.redirect('/');
+  }
+}
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -1,4 +1,5 @@
 const Medicine = require('../model/medicine');
+const Pharmacist = require('../model/pharmacist');
 
 exports.getMedicines = async (req, res) => {
   try {
