@@ -117,6 +117,58 @@ exports.filterMedicinesByMedUse = async (req, res) => {
   }
 };
 
+exports.changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const username = req.session.user.username;
+
+    const pharmacist = await Pharmacist.findOne({ username });
+
+    if (!pharmacist) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    if (oldPassword !== pharmacist.password) {
+      return res.status(401).json({ message: 'Incorrect old password' });
+    }
+
+    pharmacist.password = newPassword;
+    await pharmacist.save();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    const username = req.session.user.username;
+
+    const pharmacist = await Pharmacist.findOne({ username });
+
+    if (!pharmacist) {
+      return res.status(404).json({ message: 'pharmacist not found' });
+    }
+
+    pharmacist.password = newPassword;
+    await pharmacist.save();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.changePasswordPage = (req, res) => {
+  res.render('pharmacist/change-password', { message: null });
+};
+
+exports.resetPasswordPage = (req, res) => {
+  res.render('pharmacist/resetPassword', { message: null });
+};
+
 exports.home = async (req, res) => {
   res.render('pharmacist/pharmacistHome');
 };

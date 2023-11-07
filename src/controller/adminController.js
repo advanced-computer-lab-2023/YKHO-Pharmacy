@@ -135,6 +135,35 @@ exports.filterMedicinesByMedUse = async (req, res) => {
   }
 };
 
+exports.changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const username = req.session.user.username;
+
+    const admin = await Administrator.findOne({ username });
+
+    if (!admin) {
+      return res.status(404).json({ message: 'Administrator not found' });
+    }
+
+    if (oldPassword !== admin.password) {
+      return res.status(401).json({ message: 'Incorrect old password' });
+    }
+
+    admin.password = newPassword;
+    await admin.save();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.changePasswordPage = (req, res) => {
+  res.render('admin/change-password', { message: null });
+};
+
+
 exports.home = async (req, res) => {
   res.render('admin/adminHome');
 };

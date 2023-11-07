@@ -60,12 +60,18 @@ app.get('/admin/getRequests', isAuthenticated, adminController.getRequests);
 app.get('/admin/medicines', isAuthenticated, adminController.getMedicines);
 app.get('/admin/searchMedicines', isAuthenticated, adminController.searchMedicines);
 app.get('/admin/medicines/filter', isAuthenticated, adminController.filterMedicinesByMedUse);
+app.get('/admin/change-password', adminController.changePasswordPage);
+app.post('/admin/change-password', adminController.changePassword);
 
 //patient
 app.get('/patient/patientHome', isAuthenticated,patientController.home)
 app.get('/patient/medicines', isAuthenticated, patientController.getMedicines);
 app.get('/patient/searchMedicines', isAuthenticated, patientController.searchMedicines);
 app.get('/patient/medicines/filter', isAuthenticated, patientController.filterMedicinesByMedUse);
+app.get('/patient/change-password', patientController.changePasswordPage);
+app.post('/patient/change-password', patientController.changePassword);
+app.get('/patient/resetPassword', patientController.resetPasswordPage);
+app.post('/patient/resetPassword', patientController.resetPassword);
 
 //pharmacist
 app.get('/pharmacist/pharmacistHome', isAuthenticated,pharmacistController.home)
@@ -77,6 +83,10 @@ app.get('/pharmacist/getDetailSales', isAuthenticated, pharmacistController.getM
 app.get('/pharmacist/medicines/filter', isAuthenticated, pharmacistController.filterMedicinesByMedUse);
 app.get('/pharmacist/editMedicine', isAuthenticated,pharmacistController.edit);
 app.post('/pharmacist/editMedicine', pharmacistController.editMedicineDetailsAndPrice)
+app.get('/pharmacist/change-password', isAuthenticated, pharmacistController.changePasswordPage);
+app.post('/pharmacist/change-password', pharmacistController.changePassword);
+app.get('/pharmacist/resetPassword', pharmacistController.resetPasswordPage);
+app.post('/pharmacist/resetPassword', pharmacistController.resetPassword);
 
 //guest
 app.get('/guest/guestHome',guestController.home)
@@ -135,6 +145,74 @@ function isAuthenticated(req, res, next) {
     res.redirect('/');
   }
 }
+
+//OTP
+const { transport, generateOTP } = require('./emailConfig');
+
+app.get('/enter-otp', (req, res) => {
+  res.render('enter-otp', { message: null });
+});
+
+app.get('/request-reset', (req, res) => {
+  res.render('request-reset', { message: null });
+});
+
+app.post('/request-reset', async (req, res) => {
+  const { email } = req.body;
+
+  const patient = await Patient.findOne({ email });
+
+  if (patient) {
+    req.session.user = patient;
+    req.session.userType = 'patient';
+  } else {
+    const pharmacist = await Pharmacist.findOne({ email });
+    if (pharmacist) {
+      req.session.user = pharmacist;
+      req.session.userType = 'pharmacist';
+    } else {
+      return res.status(404).json({ message: 'Email not found' });
+    }
+  }
+
+  const otp = generateOTP();
+
+  req.session.otp = otp;
+
+  const mailOptions = {
+    from: 'yoyo_ah360@hotmail.com',
+    to: email,
+    subject: 'Password Reset OTP',
+    text: `Your OTP for password reset: ${otp}`,
+  };
+
+  transport.sendMail(mailOptions, (error) => {
+    if (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ message: 'Failed to send OTP' });
+    } else {
+      res.redirect('/enter-otp');
+    }
+  });
+});
+
+app.post('/verify-otp', (req, res) => {
+  const { otp } = req.body;
+
+  if (otp === req.session.otp) {
+    const userType = req.session.userType;
+
+    if (userType === 'patient') {
+      return res.redirect('/patient/resetPassword');
+    } else if (userType === 'pharmacist') {
+      return res.redirect('/pharmacist/resetPassword');
+    } else {
+
+    }
+  } else {
+    return res.status(401).json({ message: 'Invalid OTP' });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
