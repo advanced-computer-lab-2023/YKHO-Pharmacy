@@ -16,6 +16,11 @@
       <input type="password" id="password" />
     </label>
     <br />
+    <label>
+      Email:
+      <input type="email" id="email" />
+    </label>
+    <br />
     <button type="submit" id="addadminbutton">Add Administrator</button>
   </form>
   <p id="message"></p>
@@ -25,6 +30,7 @@
     const form = document.getElementById('addadminform');
     const un = document.getElementById('username');
     const pass = document.getElementById('password');
+    const em = document.getElementById('email');
     const message = document.getElementById('message');
     const addButton = document.getElementById('addadminbutton');
 
@@ -33,23 +39,25 @@
 
       const username = un.value;
       const password = pass.value;
+      const email = em.value;
 
-      addAdministrator(username, password);
+      addAdministrator(username, password, email);
     });
 
-    function addAdministrator(username, password) {
+    function addAdministrator(username, password, email) {
       fetch('/admin/addadministrator', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, email }),
       })
         .then((response) => response.json())
         .then((data) => {
           message.textContent = data.message;
           un.value = '';
           pass.value = '';
+          em.value = '';
         })
         .catch((error) => console.error(error));
     }

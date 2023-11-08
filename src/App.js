@@ -62,6 +62,8 @@ app.get('/admin/searchMedicines', isAuthenticated, adminController.searchMedicin
 app.get('/admin/medicines/filter', isAuthenticated, adminController.filterMedicinesByMedUse);
 app.get('/admin/change-password', adminController.changePasswordPage);
 app.post('/admin/change-password', adminController.changePassword);
+app.get('/admin/resetPassword', adminController.resetPasswordPage);
+app.post('/admin/resetPassword', adminController.resetPassword);
 
 //patient
 app.get('/patient/patientHome', isAuthenticated,patientController.home)
@@ -171,9 +173,13 @@ app.post('/request-reset', async (req, res) => {
     req.session.userType = 'patient';
   } else {
     const pharmacist = await Pharmacist.findOne({ email });
+    const admin = await Administrator.findOne({ email });
     if (pharmacist) {
       req.session.user = pharmacist;
       req.session.userType = 'pharmacist';
+    }else if (admin) {
+      req.session.user = admin;
+      req.session.userType = 'admin';
     } else {
       return res.status(404).json({ message: 'Email not found' });
     }
@@ -211,7 +217,7 @@ app.post('/verify-otp', (req, res) => {
     } else if (userType === 'pharmacist') {
       return res.redirect('/pharmacist/resetPassword');
     } else {
-
+      return res.redirect('/admin/resetPassword');
     }
   } else {
     return res.status(401).json({ message: 'Invalid OTP' });

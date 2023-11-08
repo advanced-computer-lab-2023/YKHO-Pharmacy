@@ -26,7 +26,7 @@ exports.searchMedicines = async (req, res) => {
 
 exports.addAdministrator = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     // Check if username already exists
     const existingAdministrator = await Administrator.findOne({ username });
@@ -34,7 +34,7 @@ exports.addAdministrator = async (req, res) => {
       return res.status(400).json({ message: 'Username already exists' });
     }
 
-    const newAdministrator = new Administrator({ username, password });
+    const newAdministrator = new Administrator({ username, password, email });
     await newAdministrator.save();
 
     res.status(201).json({ message: 'Administrator added successfully' });
@@ -159,10 +159,33 @@ exports.changePassword = async (req, res) => {
   }
 };
 
+exports.resetPassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    const username = req.session.user.username;
+
+    const admin = await Administrator.findOne({ username });
+
+    if (!admin) {
+      return res.status(404).json({ message: 'admin not found' });
+    }
+
+    admin.password = newPassword;
+    await admin.save();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 exports.changePasswordPage = (req, res) => {
   res.render('admin/change-password', { message: null });
 };
 
+exports.resetPasswordPage = (req, res) => {
+  res.render('admin/resetPassword', { message: null });
+};
 
 exports.home = async (req, res) => {
   res.render('admin/adminHome');
