@@ -72,6 +72,10 @@ app.get('/patient/change-password', patientController.changePasswordPage);
 app.post('/patient/change-password', patientController.changePassword);
 app.get('/patient/resetPassword', patientController.resetPasswordPage);
 app.post('/patient/resetPassword', patientController.resetPassword);
+app.post('/patient/addToCart', isAuthenticated, patientController.addToCart);
+app.get('/patient/ShoppingCart', isAuthenticated, patientController.getShoppingCart);
+app.post('/patient/removeFromCart', isAuthenticated, patientController.removeFromCart);
+app.post('/patient/editCartItemQuantity', isAuthenticated, patientController.editCartItemQuantity);
 
 //pharmacist
 app.get('/pharmacist/pharmacistHome', isAuthenticated,pharmacistController.home)

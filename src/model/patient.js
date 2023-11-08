@@ -48,6 +48,19 @@ const patientSchema = new mongoose.Schema({
     required: true,
   },
   emergencyContact: emergencyContactSchema,
+  shoppingCart: [
+    {
+      medicineName: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        default: 1,
+      },
+    },
+  ],
 });
 
 module.exports = mongoose.model('Patient', patientSchema);

@@ -80,6 +80,109 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
+exports.addToCart = async (req, res) => {
+  try {
+    const { medicineName } = req.body;
+    const username = req.session.user.username;
+
+    const patient = await Patient.findOne({ username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const cartItem = patient.shoppingCart.find(item => item.medicineName === medicineName);
+
+    if (!cartItem) {
+      patient.shoppingCart.push({ medicineName, quantity: 1 });
+    } else {
+      cartItem.quantity += 1;
+    }
+
+    await patient.save();
+
+    return res.status(200).json({ message: 'Medicine added to the shopping cart' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getShoppingCart = async (req, res) => {
+  try {
+    const username = req.session.user.username;
+
+    const patient = await Patient.findOne({ username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const shoppingCart = patient.shoppingCart;
+
+    res.render('patient/shoppingCart', { shoppingCart });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.removeFromCart = async (req, res) => {
+  try {
+    const { medicineName } = req.body;
+    const username = req.session.user.username;
+
+    const patient = await Patient.findOne({ username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const itemIndex = patient.shoppingCart.findIndex(item => item.medicineName === medicineName);
+
+    if (itemIndex !== -1) {
+      patient.shoppingCart.splice(itemIndex, 1);
+
+      await patient.save();
+
+      res.redirect('/patient/shoppingCart');
+    } else {
+      return res.status(404).json({ message: 'Medicine not found in the shopping cart' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.editCartItemQuantity = async (req, res) => {
+  try {
+    const { medicineName, newQuantity } = req.body;
+    const username = req.session.user.username;
+
+    const patient = await Patient.findOne({ username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const item = patient.shoppingCart.find((cartItem) => cartItem.medicineName === medicineName);
+
+    if (!item) {
+      return res.status(400).json({ message: 'Medicine not found in the shopping cart' });
+    }
+
+    item.quantity = newQuantity;
+
+    if (item.quantity <= 0) {
+      patient.shoppingCart = patient.shoppingCart.filter((cartItem) => cartItem.medicineName !== medicineName);
+    }
+
+    await patient.save();
+
+    res.redirect('/patient/shoppingCart');
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 exports.changePasswordPage = (req, res) => {
   res.render('patient/change-password', { message: null });
 };

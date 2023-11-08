@@ -25,6 +25,7 @@
                 <th>Description</th>
                 <th>Medicinal Use</th>
                 <th>Price</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -36,10 +37,16 @@
                     <td><%= medicine.description %></td>
                     <td><%= medicine.medUse %></td>
                     <td><%= medicine.price %></td>
+                    <td>
+                        <form action="/patient/addToCart" method="POST">
+                            <input type="hidden" name="medicineName" value="<%= medicine.name %>">
+                            <button type="submit">Add to Cart</button>
+                        </form>                        
+                    </td>
                 </tr>
             <% }); %>
         </tbody>
     </table>
-    <a href="/logout"><button>Logout</button></a>
+    <a href="/logout"><button>Logout</button></a>   
 </body>
 </html>

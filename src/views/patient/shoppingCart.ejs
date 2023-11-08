@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Cart</title>
+</head>
+<body>
+    <h1>Your Shopping Cart</h1>  
+    <ul>
+        <% shoppingCart.forEach(item => { %>
+            <li>
+                <%= item.medicineName %> - Quantity: <%= item.quantity %>
+                <form action="/patient/editCartItemQuantity" method="POST">
+                    <input type="hidden" name="medicineName" value="<%= item.medicineName %>">
+                    <input type="number" name="newQuantity" value="<%= item.quantity %>">
+                    <button type="submit">Update Quantity</button>
+                  </form>                  
+            </li>
+        <% }); %>
+    </ul>
+    <a href="/logout"><button>Logout</button></a>
+</body>
+</html>
