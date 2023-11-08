@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>Requests List</h1>
-    
+
     <table>
         <thead>
             <tr>
@@ -17,6 +17,7 @@
                 <th>Hourly Rate</th>
                 <th>Affiliation</th>
                 <th>Educational Background</th>
+                <th>Action</th> 
             </tr>
         </thead>
         <tbody>
@@ -30,6 +31,16 @@
                     <td><%= regRequest.hourlyRate %></td>
                     <td><%= regRequest.affiliation %></td>
                     <td><%= regRequest.educationalBackground %></td>
+                    <td>
+                        <form method="POST" action="/admin/acceptRequest">
+                            <input type="hidden" name="requestId" value="<%= regRequest._id %>">
+                            <button type="submit">Accept</button>
+                        </form>
+                        <form method="POST" action="/admin/rejectRequest">
+                            <input type="hidden" name="requestId" value="<%= regRequest._id %>">
+                            <button type="submit">Reject</button>
+                        </form>
+                    </td>
                 </tr>
             <% }); %>
         </tbody>
@@ -37,3 +48,4 @@
     <a href="/logout"><button>Logout</button></a>
 </body>
 </html>
+

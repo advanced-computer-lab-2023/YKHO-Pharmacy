@@ -210,3 +210,63 @@ exports.patientGet = async (req, res) => {
 exports.patientRemove = async (req, res) => {
   res.render('admin/removePatient');
 };
+
+
+
+ 
+
+exports.acceptRequest = async (req, res) => {
+  const { requestId } = req.body;
+  try {
+    
+    const request = await RegRequest.findById(requestId);
+
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    
+    const newPharmacist = new Pharmacist({
+      username: request.username,
+      name: request.name,
+      email: request.email,
+      password: request.password, 
+      dateOfBirth: request.dateOfBirth,
+      hourlyRate: request.hourlyRate,
+      affiliation: request.affiliation,
+      educationalBackground: request.educationalBackground,
+    });
+
+    
+    await newPharmacist.save();
+
+    
+    await RegRequest.findByIdAndDelete(requestId);
+    res.redirect('/admin/getRequests');
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.rejectRequest = async (req, res) => {
+  const { requestId } = req.body;
+  try {
+  
+    const request = await RegRequest.findById(requestId);
+
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    
+    await RegRequest.findByIdAndDelete(requestId);
+
+    res.redirect('/admin/getRequests');
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+

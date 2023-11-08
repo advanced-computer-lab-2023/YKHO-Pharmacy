@@ -45,7 +45,7 @@ const guestController = require('./controller/guestController');
 app.use(express.json());
 
 //admin
-app.get('/admin/adminHome', isAuthenticated, adminController.home)
+app.get('/admin/adminHome', isAuthenticated, adminController.home);
 app.get('/admin/addadministrator', isAuthenticated, adminController.adminAdd);
 app.post('/admin/addadministrator', adminController.addAdministrator);
 app.get('/admin/removePharmacist', isAuthenticated, adminController.pharmacistRemove);
@@ -57,6 +57,8 @@ app.post('/admin/getPatient', adminController.getPatient);
 app.get('/admin/getPharmacist', isAuthenticated, adminController.pharmacistGet);
 app.post('/admin/getPharmacist', adminController.getPharmacist);
 app.get('/admin/getRequests', isAuthenticated, adminController.getRequests);
+app.post('/admin/acceptRequest', adminController.acceptRequest); 
+app.post('/admin/rejectRequest', adminController.rejectRequest); 
 app.get('/admin/medicines', isAuthenticated, adminController.getMedicines);
 app.get('/admin/searchMedicines', isAuthenticated, adminController.searchMedicines);
 app.get('/admin/medicines/filter', isAuthenticated, adminController.filterMedicinesByMedUse);
@@ -227,3 +229,4 @@ app.post('/verify-otp', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
