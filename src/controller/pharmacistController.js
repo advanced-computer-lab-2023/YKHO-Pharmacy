@@ -72,7 +72,7 @@ exports.searchMedicines = async (req, res) => {
 
 exports.getMedicinesWithDetailsAndSales = async (req, res) => {
   try {
-    const medicines = await Medicine.find({}, { _id: 0, name: 1 ,detail: 1, sales: 1 });
+    const medicines = await Medicine.find({}, { _id: 0, name: 1 ,dosage: 1, description: 1, medUse: 1, sales: 1 });
     res.render('pharmacist/getDetailSales', { medicines });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -81,14 +81,16 @@ exports.getMedicinesWithDetailsAndSales = async (req, res) => {
 
 exports.editMedicineDetailsAndPrice = async (req, res) => {
   try {
-    const { name, detail, price } = req.body;
+    const { name, dosage, description, medUse, price } = req.body;
     const medicine = await Medicine.findOne({ name });
 
     if (!medicine) {
       return res.status(404).json({ error: 'Medicine not found' });
     }
 
-    medicine.detail = detail;
+    medicine.dosage = dosage;
+    medicine.description = description;
+    medicine.medUse = medUse;
     medicine.price = price;
 
     await medicine.save();

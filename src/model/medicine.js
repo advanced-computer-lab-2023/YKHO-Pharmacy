@@ -22,10 +22,6 @@ const medicineSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  detail: {
-    type: String,
-    required: true,
-  },
   quantity: {
     type: String,
     required: true,

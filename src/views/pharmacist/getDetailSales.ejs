@@ -9,7 +9,9 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Details</th>
+                <th>Dosage</th>
+                <th>Description</th>
+                <th>Medicinal Use</th>
                 <th>Sales</th>
             </tr>
         </thead>
@@ -17,7 +19,9 @@
             <% medicines.forEach(medicine => { %>
                 <tr>
                     <td><%= medicine.name %></td>
-                    <td><%= medicine.detail %></td>
+                    <td><%= medicine.dosage %></td>
+                    <td><%= medicine.description %></td>
+                    <td><%= medicine.medUse %></td>
                     <td><%= medicine.sales %></td>
                 </tr>
             <% }); %>

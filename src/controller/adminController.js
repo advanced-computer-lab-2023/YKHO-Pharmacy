@@ -45,15 +45,15 @@ exports.addAdministrator = async (req, res) => {
 
 exports.removePharmacist = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { name } = req.body;
 
     // Check if pharmacist exists
-    const pharmacist = await Pharmacist.findOne({ username });
+    const pharmacist = await Pharmacist.findOne({ name });
     if (!pharmacist) {
       return res.status(404).json({ message: 'Pharmacist not found' });
     }
 
-    await Pharmacist.findOneAndDelete({ username });
+    await Pharmacist.findOneAndDelete({ name });
 
     res.json({ message: 'Pharmacist removed successfully' });
   } catch (err) {
@@ -63,15 +63,15 @@ exports.removePharmacist = async (req, res) => {
 
 exports.removePatient = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { name } = req.body;
 
     // Check if patient exists
-    const patient = await Patient.findOne({ username });
+    const patient = await Patient.findOne({ name });
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
-    await Patient.findOneAndDelete({ username });
+    await Patient.findOneAndDelete({ name });
 
     res.json({ message: 'Patient removed successfully' });
   } catch (err) {
@@ -81,10 +81,10 @@ exports.removePatient = async (req, res) => {
 
 exports.getPharmacist = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { name } = req.body;
 
     // Check if pharmacist exists
-    const pharmacist = await Pharmacist.findOne({ username });
+    const pharmacist = await Pharmacist.findOne({ name });
     if (!pharmacist) {
       return res.status(404).json({ message: 'Pharmacist not found' });
     }
@@ -97,10 +97,10 @@ exports.getPharmacist = async (req, res) => {
 
 exports.getPatient = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { name } = req.body;
 
     // Check if patient exists
-    const patient = await Patient.findOne({ username });
+    const patient = await Patient.findOne({ name });
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }

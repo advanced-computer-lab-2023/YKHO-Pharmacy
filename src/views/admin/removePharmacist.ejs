@@ -7,8 +7,8 @@
   <h1>Remove Pharmacist</h1>
   <form id="removepharmacist">
     <label>
-      Username:
-      <input type="text" id="username" />
+      Name:
+      <input type="text" id="name" />
     </label>
     <br />
     <button type="submit">Remove Pharmacist</button>
@@ -18,20 +18,20 @@
 
   <script>
     const form = document.getElementById('removepharmacist');
-    const un = document.getElementById('username');
+    const n = document.getElementById('name');
     const message = document.getElementById('message');
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
 
-      const username = un.value;
+      const name = n.value;
 
       fetch('/admin/removePharmacist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({ name }),
       })
         .then((response) => response.json())
         .then((data) => {
