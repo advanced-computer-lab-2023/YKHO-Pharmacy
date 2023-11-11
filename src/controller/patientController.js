@@ -1,5 +1,6 @@
 const Medicine = require('../model/medicine');
 const Patient = require('../model/patient');
+const Order = require('../model/order');
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -82,7 +83,7 @@ exports.resetPassword = async (req, res) => {
 
 exports.addToCart = async (req, res) => {
   try {
-    const { medicineName } = req.body;
+    const { medicineName, medicinePrice } = req.body;
     const username = req.session.user.username;
 
     const patient = await Patient.findOne({ username });
@@ -94,7 +95,7 @@ exports.addToCart = async (req, res) => {
     const cartItem = patient.shoppingCart.find(item => item.medicineName === medicineName);
 
     if (!cartItem) {
-      patient.shoppingCart.push({ medicineName, quantity: 1 });
+      patient.shoppingCart.push({ medicineName, quantity: 1, medicinePrice });
     } else {
       cartItem.quantity += 1;
     }
@@ -180,6 +181,96 @@ exports.editCartItemQuantity = async (req, res) => {
     res.redirect('/patient/shoppingCart');
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getcheckoutPage = async (req, res) => {
+  try {
+    const username = req.session.user.username;
+
+    const patient = await Patient.findOne({ username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const deliveryAdd = patient.deliveryAdd;
+    const shoppingCart = patient.shoppingCart;
+
+    res.render('patient/checkout', { deliveryAdd, shoppingCart });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.addAddress = async (req, res) => {
+  try {
+    const { newAddress } = req.body;
+
+    // Check if the delivery address is already stored in the patient's profile
+    const username = req.session.user.username;
+
+    const patient = await Patient.findOne({ username });
+
+    const addressExists = patient.deliveryAdd.some((address) => address.address === newAddress);
+
+    // If the address is not stored, add it
+    if (!addressExists) {
+      patient.deliveryAdd.push({ address: newAddress });
+      await patient.save();
+
+      // Return the updated list of addresses
+      res.redirect('/patient/checkout');
+    } else {
+      // Address already exists, return the current list of addresses
+      res.status(200).json({ message: 'Address already exists.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+exports.checkout = async (req, res) => {
+  try {
+    const { deliveryAddress, paymentMethod } = req.body;
+
+    // Check if the delivery address is already stored in the patient's profile
+    const username = req.session.user.username;
+
+    const patient = await Patient.findOne({ username });
+
+    const addressExists = patient.deliveryAdd.some((address) => address.address === deliveryAddress);
+
+    // If the address is not stored, add it
+    if (!addressExists) {
+      patient.deliveryAdd.push({ address: deliveryAddress });
+      await patient.save();
+    }
+
+    // Create a new order in the database
+    const order = new Order({
+      username: username,
+      shoppingCart: patient.shoppingCart,
+      deliveryAdd: deliveryAddress,
+      paymentMethod: paymentMethod,
+    });
+
+    // Save the order to the database
+    await order.save();
+
+    // TODO: Implement payment processing with Stripe or other payment gateway
+
+    // TODO: Update inventory and perform other necessary operations
+
+    // Clear the patient's shopping cart (assuming you have a cart model)
+    // ClearPatientCartFunction(req.patient._id);
+
+    res.status(201).json({ message: 'Order placed successfully!', orderId: order._id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 

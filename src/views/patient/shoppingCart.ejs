@@ -12,11 +12,13 @@
                 <form action="/patient/editCartItemQuantity" method="POST">
                     <input type="hidden" name="medicineName" value="<%= item.medicineName %>">
                     <input type="number" name="newQuantity" value="<%= item.quantity %>">
+                    <input type="hidden" name="price" value="<%= item.price %>">
                     <button type="submit">Update Quantity</button>
                   </form>                  
             </li>
         <% }); %>
     </ul>
+    <a href="/patient/checkout"><button>Checkout</button></a>
     <a href="/logout"><button>Logout</button></a>
 </body>
 </html>

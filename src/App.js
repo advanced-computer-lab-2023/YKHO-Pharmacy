@@ -80,6 +80,9 @@ app.post('/patient/addToCart', isAuthenticated, patientController.addToCart);
 app.get('/patient/ShoppingCart', isAuthenticated, patientController.getShoppingCart);
 app.post('/patient/removeFromCart', isAuthenticated, patientController.removeFromCart);
 app.post('/patient/editCartItemQuantity', isAuthenticated, patientController.editCartItemQuantity);
+app.get('/patient/checkout', isAuthenticated, patientController.getcheckoutPage);
+app.post('/patient/addAddress', isAuthenticated, patientController.addAddress);
+app.post('/patient/checkout', isAuthenticated, patientController.checkout);
 
 //pharmacist
 app.get('/pharmacist/pharmacistHome', isAuthenticated,pharmacistController.home)

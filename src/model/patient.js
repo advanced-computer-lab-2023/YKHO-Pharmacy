@@ -59,8 +59,19 @@ const patientSchema = new mongoose.Schema({
         required: true,
         default: 1,
       },
+      medicinePrice: {
+        type: String,
+        required: true,
+      },
     },
   ],
+  deliveryAdd: [
+    {
+      address: {
+        type: String,
+      }
+    }
+  ]
 });
 
 module.exports = mongoose.model('Patient', patientSchema);

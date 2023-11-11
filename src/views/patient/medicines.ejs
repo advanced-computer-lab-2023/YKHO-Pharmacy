@@ -40,6 +40,7 @@
                     <td>
                         <form action="/patient/addToCart" method="POST">
                             <input type="hidden" name="medicineName" value="<%= medicine.name %>">
+                            <input type="hidden" name="medicinePrice" value="<%= medicine.price %>">
                             <button type="submit">Add to Cart</button>
                         </form>                        
                     </td>
