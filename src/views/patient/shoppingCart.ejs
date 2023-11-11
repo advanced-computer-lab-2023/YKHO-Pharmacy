@@ -14,7 +14,11 @@
                     <input type="number" name="newQuantity" value="<%= item.quantity %>">
                     <input type="hidden" name="price" value="<%= item.price %>">
                     <button type="submit">Update Quantity</button>
-                  </form>                  
+                  </form>
+                  <form action="/patient/removeFromCart" method="POST">
+                    <input type="hidden" name="medicineName" value="<%= item.medicineName %>">
+                    <button type="submit">Remove from Cart</button>
+                </form>                  
             </li>
         <% }); %>
     </ul>
