@@ -83,6 +83,7 @@ app.post('/patient/editCartItemQuantity', isAuthenticated, patientController.edi
 app.get('/patient/checkout', isAuthenticated, patientController.getcheckoutPage);
 app.post('/patient/addAddress', isAuthenticated, patientController.addAddress);
 app.post('/patient/checkout', isAuthenticated, patientController.checkout);
+app.get('/patient/orders',isAuthenticated,patientController.getorders);
 
 //pharmacist
 app.get('/pharmacist/pharmacistHome', isAuthenticated,pharmacistController.home)

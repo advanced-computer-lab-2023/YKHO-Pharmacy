@@ -126,6 +126,25 @@ exports.getShoppingCart = async (req, res) => {
   }
 };
 
+exports.getorders = async (req, res) => {
+  try {
+    const username = req.session.user.username;
+
+    const orders = await Order.find({ username });
+
+    if (orders.length === 0) {
+      return res.status(404).json({ message: 'You have No Orders' });
+    }
+
+    res.render('patient/orders', { orders });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+
 exports.removeFromCart = async (req, res) => {
   try {
     const { medicineName } = req.body;
