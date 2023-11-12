@@ -4,7 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Orders</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
 
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .cancel-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -23,20 +48,26 @@
                             <th>Delivery Address</th>
                             <th>Payment Method</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% orders.forEach(order => { %>
                             <tr>
-                                <td><%= order._id %></td>
-                                <% order.shoppingCart.forEach(item => { %>
+                                <td rowspan="<%= order.shoppingCart.length %>"><%= order._id %></td>
+                                <% order.shoppingCart.forEach((item, index) => { %>
                                     <td><%= item.medicineName %></td>
                                     <td><%= item.quantity %></td>
-                                <% }); %>
-                                <td><%= order.deliveryAdd %></td>
-                                <td><%= order.paymentMethod %></td>
-                                <td><%= order.status %></td>
-                            </tr>
+                                    <% if (index === 0) { %>
+                                        <td rowspan="<%= order.shoppingCart.length %>"><%= order.deliveryAdd %></td>
+                                        <td rowspan="<%= order.shoppingCart.length %>"><%= order.paymentMethod %></td>
+                                        <td rowspan="<%= order.shoppingCart.length %>"><%= order.status %></td>
+                                        <td rowspan="<%= order.shoppingCart.length %>">
+                                            <button class="cancel-btn" onclick="cancelOrder('<%= order._id %>')">Cancel Order</button>
+                                        </td>
+                                    <% } %>
+                                </tr>
+                            <% }); %>
                         <% }); %>
                     </tbody>
                 </table>
@@ -47,7 +78,12 @@
     </main>
 
     <footer>
-        <!-- Add any footer content or links to scripts here -->
+        <script>
+            function cancelOrder(orderId) {
+                // Implement your cancel order logic here
+                console.log("Cancel order with ID:", orderId);
+            }
+        </script>
     </footer>
 </body>
 </html>
