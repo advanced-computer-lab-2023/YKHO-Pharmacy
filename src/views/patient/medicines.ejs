@@ -30,21 +30,24 @@
         </thead>
         <tbody>
             <% medicines.forEach(medicine => { %>
-                <tr>
-                    <td><img src="<%= medicine.image %>" alt="Medicine Image" style="width: 200px; height: 150px;"></td>
-                    <td><%= medicine.name %></td>
-                    <td><%= medicine.dosage %></td>
-                    <td><%= medicine.description %></td>
-                    <td><%= medicine.medUse %></td>
-                    <td><%= medicine.price %></td>
-                    <td>
-                        <form action="/patient/addToCart" method="POST">
-                            <input type="hidden" name="medicineName" value="<%= medicine.name %>">
-                            <input type="hidden" name="medicinePrice" value="<%= medicine.price %>">
-                            <button type="submit">Add to Cart</button>
-                        </form>                        
-                    </td>
-                </tr>
+                <% if (medicine.quantity > 0) { %>
+                    <tr>
+                        <td><img src="<%= medicine.image %>" alt="Medicine Image" style="width: 200px; height: 150px;"></td>
+                        <td><%= medicine.name %></td>
+                        <td><%= medicine.dosage %></td>
+                        <td><%= medicine.description %></td>
+                        <td><%= medicine.medUse %></td>
+                        <td><%= medicine.price %></td>
+                        <td>
+                            <form action="/patient/addToCart" method="POST">
+                                <input type="hidden" name="medicineName" value="<%= medicine.name %>">
+                                <input type="hidden" name="medicinePrice" value="<%= medicine.price %>">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit">Add to Cart</button>
+                            </form>                        
+                        </td>
+                    </tr>
+                <% } %>
             <% }); %>
         </tbody>
     </table>

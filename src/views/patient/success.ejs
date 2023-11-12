@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Success</title>
+</head>
+<body>
+    <h1>Order Placed Successfully!</h1>
+
+    <script>
+        fetch('/patient/emptyCart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    </script>
+
+    <a href="/patient/patientHome"><button>Go to Home</button></a>
+</body>
+</html>

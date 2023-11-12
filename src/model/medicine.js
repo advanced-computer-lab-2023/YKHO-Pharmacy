@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const medicineSchema = new mongoose.Schema({
   image: {
     type: String,
-    required: true,
   },
   name: {
     type: String,

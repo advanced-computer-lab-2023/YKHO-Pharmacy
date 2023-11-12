@@ -19,17 +19,14 @@
 
     <!-- Payment Method Section -->
     <label for="paymentMethod">Payment Method:</label>
-    <select name="paymentMethod" id="paymentMethod" onchange="handlePaymentMethodChange()">
+    <select name="paymentMethod" id="paymentMethod">
         <option value="">Select Payment Method</option>
         <option value="wallet">Wallet</option>
         <option value="creditCard">Credit Card</option>
         <option value="cashOnDelivery">Cash on Delivery</option>
     </select>
 
-
-    
-
-    <!-- Medicines Section (assuming you have a list of medicines in your shopping cart) -->
+    <!-- Medicines Section -->
     <ul>
         <% let total = 0; %>
         <% shoppingCart.forEach(item => { %>

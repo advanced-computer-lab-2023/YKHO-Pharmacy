@@ -1,6 +1,7 @@
 const Medicine = require('../model/medicine');
 const Patient = require('../model/patient');
 const Order = require('../model/order');
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -83,7 +84,7 @@ exports.resetPassword = async (req, res) => {
 
 exports.addToCart = async (req, res) => {
   try {
-    const { medicineName, medicinePrice } = req.body;
+    const { medicineName, medicinePrice, quantity } = req.body;
     const username = req.session.user.username;
 
     const patient = await Patient.findOne({ username });
@@ -92,12 +93,22 @@ exports.addToCart = async (req, res) => {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
+    const availableMedicine = await Medicine.findOne({ name: medicineName });
+
+    if (!availableMedicine) {
+      return res.status(404).json({ message: 'Medicine not found' });
+    }
+
+    if (quantity > availableMedicine.quantity) {
+      return res.status(400).json({ message: 'Insufficient stock' });
+    }
+
     const cartItem = patient.shoppingCart.find(item => item.medicineName === medicineName);
 
     if (!cartItem) {
-      patient.shoppingCart.push({ medicineName, quantity: 1, medicinePrice });
+      patient.shoppingCart.push({ medicineName, quantity, medicinePrice });
     } else {
-      cartItem.quantity += 1;
+      cartItem.quantity += quantity;
     }
 
     await patient.save();
@@ -107,6 +118,7 @@ exports.addToCart = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.getShoppingCart = async (req, res) => {
   try {
@@ -170,6 +182,16 @@ exports.editCartItemQuantity = async (req, res) => {
       return res.status(400).json({ message: 'Medicine not found in the shopping cart' });
     }
 
+    const availableMedicine = await Medicine.findOne({ name: medicineName });
+
+    if (!availableMedicine) {
+      return res.status(404).json({ message: 'Medicine not found' });
+    }
+
+    if (newQuantity > availableMedicine.quantity) {
+      return res.status(400).json({ message: 'Insufficient stock' });
+    }
+
     item.quantity = newQuantity;
 
     if (item.quantity <= 0) {
@@ -231,24 +253,53 @@ exports.addAddress = async (req, res) => {
   }
 };
 
-
 exports.checkout = async (req, res) => {
   try {
     const { deliveryAddress, paymentMethod } = req.body;
-
-    // Check if the delivery address is already stored in the patient's profile
     const username = req.session.user.username;
-
     const patient = await Patient.findOne({ username });
+    const totalAmount = calculateTotalAmount(patient.shoppingCart);
 
-    const addressExists = patient.deliveryAdd.some((address) => address.address === deliveryAddress);
+    // Check if the payment method is "wallet"
+    if (paymentMethod === 'wallet') {
+      // Check if the patient has sufficient balance in the wallet
+      if (patient.wallet >= totalAmount) {
+        patient.wallet -= totalAmount;
+      } else {
+        return res.status(400).json({ message: 'Insufficient funds in the wallet' });
+      }
+    } else if (paymentMethod === 'creditCard'){
+      const order = new Order({
+        username: username,
+        shoppingCart: patient.shoppingCart,
+        deliveryAdd: deliveryAddress,
+        paymentMethod: paymentMethod,
+        status: 'pending payment'
+      });
+      await order.save();
+      // Create a Stripe Checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'payment',
+        line_items: patient.shoppingCart.map(item => {
+          return{
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: item.medicineName,
+              },
+              unit_amount: item.medicinePrice * 100,
+            },
+            quantity: item.quantity,
+          }
+        }),
+        success_url: `http://localhost:${process.env.PORT}/patient/success`,
+        cancel_url: `http://localhost:${process.env.PORT}/patient/checkout`,
+      });
 
-    // If the address is not stored, add it
-    if (!addressExists) {
-      patient.deliveryAdd.push({ address: deliveryAddress });
-      await patient.save();
+      // Redirect to the Stripe Checkout page
+      return res.redirect(session.url);
     }
-
     // Create a new order in the database
     const order = new Order({
       username: username,
@@ -256,22 +307,69 @@ exports.checkout = async (req, res) => {
       deliveryAdd: deliveryAddress,
       paymentMethod: paymentMethod,
     });
-
-    // Save the order to the database
     await order.save();
 
-    // TODO: Implement payment processing with Stripe or other payment gateway
+    // Update medicine quantities based on the items in the order
+    for (const item of order.shoppingCart) {
+      const medicine = await Medicine.findOne({ name: item.medicineName });
 
-    // TODO: Update inventory and perform other necessary operations
+      if (medicine) {
+        // Adjust the medicine quantity (subtract the quantity in the order)
+        medicine.quantity -= item.quantity;
 
-    // Clear the patient's shopping cart (assuming you have a cart model)
-    // ClearPatientCartFunction(req.patient._id);
+        // Save the updated medicine
+        await medicine.save();
+      } else {
+        console.error(`Medicine not found: ${item.medicineName}`);
+      }
+    }
+
+    // Clear the patient's shopping cart
+    patient.shoppingCart = [];
+    await patient.save();
 
     res.status(201).json({ message: 'Order placed successfully!', orderId: order._id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
+};
+
+// Helper function to calculate the total amount from the shopping cart
+const calculateTotalAmount = (shoppingCart) => {
+  return shoppingCart.reduce((total, item) => total + item.medicinePrice * item.quantity, 0);
+};
+
+exports.emptyCart = async (req, res) => {
+  const username = req.session.user.username;
+  const patient = await Patient.findOne({ username });
+
+  for (const item of patient.shoppingCart) {
+    const medicine = await Medicine.findOne({ name: item.medicineName });
+
+    if (medicine) {
+      // Adjust the medicine quantity (subtract the quantity in the order)
+      medicine.quantity -= item.quantity;
+
+      // Save the updated medicine
+      await medicine.save();
+    } else {
+      console.error(`Medicine not found: ${item.medicineName}`);
+    }
+  }
+
+  await Order.updateOne(
+    { username: username, shoppingCart: { $eq: patient.shoppingCart } },
+    { $set: { status: 'placed' } }
+  );
+
+  patient.shoppingCart = [];
+  await patient.save();
+  res.status(200).send('Shopping cart emptied successfully');
+};
+
+exports.getsuccessPage = (req, res) => {
+  res.render('patient/success', { message: null });
 };
 
 exports.changePasswordPage = (req, res) => {
@@ -285,3 +383,37 @@ exports.resetPasswordPage = (req, res) => {
 exports.home = async (req, res) => {
   res.render('patient/patientHome');
 };
+
+
+
+
+
+// const PayByCredit = async (req, res) => {
+  
+//   const appoitmentid = req.params.id;
+//   const appoitment = await appointmentModel.findone({ _id: appoitmentid }) - populate("doctorID");
+  
+//   try {
+//     const session = await stripe.checkout.sessions.create({
+//       payment_method_types: ['card'], 
+//       mode: 'payment', 
+//       line_items: [{
+//         price_data: {
+//           currency: 'usd',
+//           product_data: {
+//             name: "Appointment With Dr." + appoitment.doctorID.name,
+//           },
+//           unit_amount: appoitment.price * 100,
+//         },
+//         quantity: 1,
+//       }],
+//       success_url: `http://localhost:${process.env.PORT}/sucess`,
+//       cancel_url: `https://localhost:${process.env.PORT}/fail`,
+//   })
+//   res.redirect(session.url);
+
+//   }catch(e){
+//     console.error(e);
+//     res.status(500).send('Internal Server Error');
+//   }
+// }

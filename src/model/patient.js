@@ -71,7 +71,11 @@ const patientSchema = new mongoose.Schema({
         type: String,
       }
     }
-  ]
+  ],
+  wallet: {
+    type: Number,
+    default: 0
+  }
 });
 
 module.exports = mongoose.model('Patient', patientSchema);

@@ -35,6 +35,7 @@ app.use(session({
 const Administrator = require('./model/administrator');
 const Pharmacist = require('./model/pharmacist');
 const Patient = require('./model/patient');
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 //controllers
 const adminController = require('./controller/adminController');
@@ -83,6 +84,8 @@ app.post('/patient/editCartItemQuantity', isAuthenticated, patientController.edi
 app.get('/patient/checkout', isAuthenticated, patientController.getcheckoutPage);
 app.post('/patient/addAddress', isAuthenticated, patientController.addAddress);
 app.post('/patient/checkout', isAuthenticated, patientController.checkout);
+app.post('/patient/emptyCart', isAuthenticated, patientController.emptyCart);
+app.get('/patient/success', isAuthenticated, patientController.getsuccessPage);
 
 //pharmacist
 app.get('/pharmacist/pharmacistHome', isAuthenticated,pharmacistController.home)

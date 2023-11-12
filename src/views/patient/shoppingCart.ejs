@@ -12,7 +12,6 @@
                 <form action="/patient/editCartItemQuantity" method="POST">
                     <input type="hidden" name="medicineName" value="<%= item.medicineName %>">
                     <input type="number" name="newQuantity" value="<%= item.quantity %>">
-                    <input type="hidden" name="price" value="<%= item.price %>">
                     <button type="submit">Update Quantity</button>
                   </form>
                   <form action="/patient/removeFromCart" method="POST">
