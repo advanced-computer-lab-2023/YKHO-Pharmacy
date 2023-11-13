@@ -6,12 +6,23 @@
 <body>
     <h1>Order Placed Successfully!</h1>
 
+    <p id="orderIdDisplay">Order ID: Loading...</p>
+
     <script>
         fetch('/patient/emptyCart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Extract the order ID from the response
+            const orderId = data.orderId;
+
+            // Display the order ID in the HTML
+            const orderIdDisplay = document.getElementById('orderIdDisplay');
+            orderIdDisplay.textContent = `Order ID: ${orderId}`;
         })
         .catch(error => {
             console.error(error);

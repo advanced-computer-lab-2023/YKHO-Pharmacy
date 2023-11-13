@@ -90,6 +90,8 @@ app.post('/patient/addAddress', isAuthenticated, patientController.addAddress);
 app.post('/patient/checkout', isAuthenticated, patientController.checkout);
 app.post('/patient/emptyCart', isAuthenticated, patientController.emptyCart);
 app.get('/patient/success', isAuthenticated, patientController.getsuccessPage);
+app.post('/patient/failedOrder', isAuthenticated, patientController.failedOrder);
+app.get('/patient/failure', isAuthenticated, patientController.getfailurePage);
 app.get('/patient/orders',isAuthenticated,patientController.getorders);
 
 //pharmacist

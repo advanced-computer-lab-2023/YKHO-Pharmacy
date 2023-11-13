@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script>
+        fetch('/patient/failedOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            // Redirect to the checkout page
+            window.location.href = '/patient/checkout';
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    </script>
+</body>
+</html>
+

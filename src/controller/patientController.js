@@ -154,9 +154,6 @@ exports.getorders = async (req, res) => {
   }
 };
 
-
-
-
 exports.removeFromCart = async (req, res) => {
   try {
     const { medicineName } = req.body;
@@ -315,7 +312,7 @@ exports.checkout = async (req, res) => {
           }
         }),
         success_url: `http://localhost:${process.env.PORT}/patient/success`,
-        cancel_url: `http://localhost:${process.env.PORT}/patient/checkout`,
+        cancel_url: `http://localhost:${process.env.PORT}/patient/failure`,
       });
 
       // Redirect to the Stripe Checkout page
@@ -379,18 +376,36 @@ exports.emptyCart = async (req, res) => {
     }
   }
 
-  await Order.updateOne(
-    { username: username, shoppingCart: { $eq: patient.shoppingCart } },
-    { $set: { status: 'placed' } }
+  const order = await Order.findOneAndUpdate(
+    { username: username, shoppingCart: { $eq: patient.shoppingCart }, status: 'pending payment' },
+    { $set: { status: 'placed' } },
+    { new: true } // Return the updated document
   );
-
+  
   patient.shoppingCart = [];
   await patient.save();
-  res.status(200).send('Shopping cart emptied successfully');
+  res.status(200).json({ message: 'Shopping cart emptied successfully', orderId: order._id });
+};
+
+exports.failedOrder = async (req, res) => {
+  const username = req.session.user.username;
+  const patient = await Patient.findOne({ username });
+
+  const order = await Order.findOneAndUpdate(
+    { username: username, shoppingCart: { $eq: patient.shoppingCart }, status: 'pending payment' },
+    { $set: { status: 'payment failed' } },
+    { new: true } // Return the updated document
+  );
+  
+  res.status(200).json({ message: 'Payment failed', orderId: order._id });
 };
 
 exports.getsuccessPage = (req, res) => {
   res.render('patient/success', { message: null });
+};
+
+exports.getfailurePage = (req, res) => {
+  res.render('patient/failure', { message: null });
 };
 
 exports.changePasswordPage = (req, res) => {
