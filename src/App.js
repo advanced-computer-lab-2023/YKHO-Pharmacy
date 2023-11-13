@@ -93,6 +93,7 @@ app.get('/patient/success', isAuthenticated, patientController.getsuccessPage);
 app.post('/patient/failedOrder', isAuthenticated, patientController.failedOrder);
 app.get('/patient/failure', isAuthenticated, patientController.getfailurePage);
 app.get('/patient/orders',isAuthenticated,patientController.getorders);
+app.post('/patient/cancelOrder', isAuthenticated, patientController.cancelOrder);
 
 //pharmacist
 app.get('/pharmacist/pharmacistHome', isAuthenticated,pharmacistController.home)

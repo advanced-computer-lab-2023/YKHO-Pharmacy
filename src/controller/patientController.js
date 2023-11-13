@@ -400,6 +400,24 @@ exports.failedOrder = async (req, res) => {
   res.status(200).json({ message: 'Payment failed', orderId: order._id });
 };
 
+exports.cancelOrder = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+
+    const order = await Order.findOneAndUpdate(
+      { _id : orderId },
+      { $set: { status: 'canceled' } },
+      { new: true } // Return the updated document
+    );
+
+    res.status(200).json({ message: 'Order canceled', orderId: order._id  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 exports.getsuccessPage = (req, res) => {
   res.render('patient/success', { message: null });
 };
