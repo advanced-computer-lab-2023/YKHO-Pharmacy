@@ -1,9 +1,5 @@
 const Patient = require('../model/patient');
 const RegRequest = require('../model/regRequest');
-const multer = require('multer');
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
 exports.createPatient = async (req, res) => {
   try {

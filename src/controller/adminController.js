@@ -114,11 +114,21 @@ exports.getPatient = async (req, res) => {
 exports.getRequests = async (req, res) => {
   try {
     const getRequests = await RegRequest.find();
-    res.render('admin/getRequests', { getRequests });
+
+    // Add file URLs to each request object
+    const requestsWithFileURLs = getRequests.map(request => ({
+      ...request._doc,
+      idFileURL: request.idFile ? `/uploads/${request._id}/idFile` : null,
+      medicalDegreeFileURL: request.medicalDegreeFile ? `/uploads/${request._id}/medicalDegreeFile` : null,
+      workingLicenseFileURL: request.workingLicenseFile ? `/uploads/${request._id}/workingLicenseFile` : null,
+    }));
+
+    res.render('admin/getRequests', { getRequests: requestsWithFileURLs });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.filterMedicinesByMedUse = async (req, res) => {
   try {

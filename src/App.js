@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 8000;
 const mongoose = require('mongoose');
 const multer = require('multer');
+const RegRequest = require('./model/regRequest');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -119,6 +120,25 @@ app.post('/guest/createRequest', upload.fields([
   { name: 'medicalDegreeFile', maxCount: 1 },
   { name: 'workingLicenseFile', maxCount: 1 }
 ]), guestController.createRequest);
+app.get('/fetchFile', async (req, res) => {
+  try {
+    const requestId = req.query.id;
+    const fileType = req.query.type;
+    // Retrieve file data from the database based on requestId and fileType
+    const request = await RegRequest.findById(requestId);
+
+    if (!request || !request[fileType]) {
+      return res.status(404).send('File not found');
+    }
+
+    const fileData = request[fileType];
+    res.set('Content-Type', fileData.contentType);
+    res.send(fileData.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 
 //login

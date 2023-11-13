@@ -17,6 +17,9 @@
                 <th>Hourly Rate</th>
                 <th>Affiliation</th>
                 <th>Educational Background</th>
+                <th>ID File</th>
+                <th>Medical Degree File</th>
+                <th>Working License File</th>
                 <th>Action</th> 
             </tr>
         </thead>
@@ -31,6 +34,10 @@
                     <td><%= regRequest.hourlyRate %></td>
                     <td><%= regRequest.affiliation %></td>
                     <td><%= regRequest.educationalBackground %></td>
+                    <!-- Display file links -->
+                    <td><a href="/fetchFile?id=<%= regRequest._id %>&type=idFile" target="_blank">ID File</a></td>
+                    <td><a href="/fetchFile?id=<%= regRequest._id %>&type=medicalDegreeFile" target="_blank">Medical Degree File</a></td>
+                    <td><a href="/fetchFile?id=<%= regRequest._id %>&type=workingLicenseFile" target="_blank">Working License File</a></td>
                     <td>
                         <form method="POST" action="/admin/acceptRequest">
                             <input type="hidden" name="requestId" value="<%= regRequest._id %>">
@@ -48,4 +55,3 @@
     <a href="/logout"><button>Logout</button></a>
 </body>
 </html>
-
