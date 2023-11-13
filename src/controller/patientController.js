@@ -207,7 +207,9 @@ exports.editCartItemQuantity = async (req, res) => {
       return res.status(404).json({ message: 'Medicine not found' });
     }
 
-    if (newQuantity > availableMedicine.quantity) {
+    const availableQuantity = parseInt(availableMedicine.quantity, 10);
+
+    if (newQuantity > availableQuantity) {
       return res.status(400).json({ message: 'Insufficient stock' });
     }
 
