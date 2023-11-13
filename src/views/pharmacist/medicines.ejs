@@ -40,6 +40,16 @@
                     <td><%= medicine.quantity %></td>
                     <td><%= medicine.sales %></td>
                     <td><%= medicine.price %></td>
+                    <td>
+                        <form action="/pharmacist/edit" method="POST">
+                            <input type="hidden" name="name" value="<%= medicine.name %>">
+                            <input type="hidden" name="dosage" value="<%= medicine.dosage %>">
+                            <input type="hidden" name="description" value="<%= medicine.description %>">
+                            <input type="hidden" name="medUse" value="<%= medicine.medUse %>">
+                            <input type="hidden" name="price" value="<%= medicine.price %>">
+                            <button type="submit">Edit</button>
+                        </form>                        
+                    </td>
                 </tr>
             <% }); %>
         </tbody>

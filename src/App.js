@@ -101,9 +101,8 @@ app.get('/pharmacist/medicines', isAuthenticated, pharmacistController.getMedici
 app.get('/pharmacist/createMedicines', isAuthenticated,pharmacistController.create);
 app.post('/pharmacist/createMedicines', pharmacistController.createMedicine);
 app.get('/pharmacist/searchMedicines', isAuthenticated, pharmacistController.searchMedicines);
-app.get('/pharmacist/getDetailSales', isAuthenticated, pharmacistController.getMedicinesWithDetailsAndSales)
 app.get('/pharmacist/medicines/filter', isAuthenticated, pharmacistController.filterMedicinesByMedUse);
-app.get('/pharmacist/editMedicine', isAuthenticated,pharmacistController.edit);
+app.post('/pharmacist/edit', isAuthenticated,pharmacistController.edit);
 app.post('/pharmacist/editMedicine', pharmacistController.editMedicineDetailsAndPrice)
 app.get('/pharmacist/change-password', isAuthenticated, pharmacistController.changePasswordPage);
 app.post('/pharmacist/change-password', pharmacistController.changePassword);

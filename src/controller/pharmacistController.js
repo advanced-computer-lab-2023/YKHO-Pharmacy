@@ -70,15 +70,6 @@ exports.searchMedicines = async (req, res) => {
   }
 };
 
-exports.getMedicinesWithDetailsAndSales = async (req, res) => {
-  try {
-    const medicines = await Medicine.find({}, { _id: 0, name: 1 ,dosage: 1, description: 1, medUse: 1, sales: 1 });
-    res.render('pharmacist/getDetailSales', { medicines });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
 exports.editMedicineDetailsAndPrice = async (req, res) => {
   try {
     const { name, dosage, description, medUse, price } = req.body;
@@ -180,5 +171,6 @@ exports.create = async (req, res) => {
 };
 
 exports.edit = async (req, res) => {
-  res.render('pharmacist/editMedicine');
+  const { name, dosage, description, medUse, price } = req.body;
+  res.render('pharmacist/editMedicine', { name, dosage, description, medUse, price });
 };

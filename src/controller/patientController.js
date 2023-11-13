@@ -277,7 +277,7 @@ exports.checkout = async (req, res) => {
     const username = req.session.user.username;
     const patient = await Patient.findOne({ username });
     const totalAmount = calculateTotalAmount(patient.shoppingCart);
-
+    
     // Check if the payment method is "wallet"
     if (paymentMethod === 'wallet') {
       // Check if the patient has sufficient balance in the wallet
@@ -333,7 +333,8 @@ exports.checkout = async (req, res) => {
 
       if (medicine) {
         // Adjust the medicine quantity (subtract the quantity in the order)
-        medicine.quantity -= item.quantity;
+        medicine.quantity -= parseInt(item.quantity, 10);
+        medicine.sales = parseInt(medicine.sales, 10) + parseInt(item.quantity, 10);
 
         // Save the updated medicine
         await medicine.save();
@@ -367,7 +368,8 @@ exports.emptyCart = async (req, res) => {
 
     if (medicine) {
       // Adjust the medicine quantity (subtract the quantity in the order)
-      medicine.quantity -= item.quantity;
+      medicine.quantity -= parseInt(item.quantity, 10);
+      medicine.sales = parseInt(medicine.sales, 10) + parseInt(item.quantity, 10);
 
       // Save the updated medicine
       await medicine.save();
@@ -403,12 +405,30 @@ exports.failedOrder = async (req, res) => {
 exports.cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.body;
-
+    
     const order = await Order.findOneAndUpdate(
-      { _id : orderId },
+      { _id: orderId, status: 'placed' },
       { $set: { status: 'canceled' } },
       { new: true } // Return the updated document
     );
+    
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    for (const item of order.shoppingCart) {
+      const medicine = await Medicine.findOne({ name: item.medicineName });
+  
+      if (medicine) {
+        medicine.quantity = parseInt(medicine.quantity, 10) + parseInt(item.quantity, 10);
+        medicine.sales = parseInt(medicine.sales, 10) - parseInt(item.quantity, 10);
+  
+        // Save the updated medicine
+        await medicine.save();
+      } else {
+        console.error(`Medicine not found: ${item.medicineName}`);
+      }
+    }
 
     res.status(200).json({ message: 'Order canceled', orderId: order._id  });
   } catch (error) {
