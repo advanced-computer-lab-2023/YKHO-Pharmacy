@@ -2,6 +2,10 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 8000;
 const mongoose = require('mongoose');
+const multer = require('multer');
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 require('dotenv').config();
 
@@ -108,7 +112,12 @@ app.get('/guest/guestHome',guestController.home)
 app.get('/guest/createPatient', guestController.register);
 app.post('/guest/createPatient', guestController.createPatient);
 app.get('/guest/createRequest', guestController.request);
-app.post('/guest/createRequest', guestController.createRequest);
+app.post('/guest/createRequest', upload.fields([
+  { name: 'idFile', maxCount: 1 },
+  { name: 'medicalDegreeFile', maxCount: 1 },
+  { name: 'workingLicenseFile', maxCount: 1 }
+]), guestController.createRequest);
+
 
 //login
 app.get('/', (req, res) => {
@@ -236,4 +245,3 @@ app.post('/verify-otp', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-

@@ -35,6 +35,18 @@ const regRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  idFile: {
+    data: Buffer,
+    contentType: String,
+  },
+  medicalDegreeFile: {
+    data: Buffer,
+    contentType: String,
+  },
+  workingLicenseFile: {
+    data: Buffer,
+    contentType: String,
+  },
 });
 
 module.exports = mongoose.model('regRequest', regRequestSchema);
