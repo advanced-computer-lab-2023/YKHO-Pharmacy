@@ -27,11 +27,8 @@ exports.createMedicine = async (req, res) => {
     let existingMedicine = await Medicine.findOne({ name });
 
     if (existingMedicine) {
-      existingMedicine.quantity = parseInt(existingMedicine.quantity) + parseInt(quantity);
-      await existingMedicine.save();
-
       return res.json({
-        message: 'Medicine quantity updated successfully',
+        message: 'Medicine with same name already exists',
         medicine: existingMedicine,
       });
     }
