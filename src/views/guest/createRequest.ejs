@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>Registration Request</h1>
-    <form action="/guest/createRequest" method="POST" enctype="multipart/form-data">
+    <form action="/guest/createRequest" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
         <label for="username">Username:</label>
         <input type="text" name="username" required><br>
 
@@ -16,7 +16,10 @@
         <input type="email" name="email" required><br>
 
         <label for="password">Password:</label>
-        <input type="password" name="password" required><br>
+        <input type="password" name="password" id="passwordInput" required>
+        <div id="passwordError" style="color: red; display: none;">
+            Password must contain at least 1 uppercase letter, 1 lowercase letter, no spaces, and at least 1 special symbol.
+        </div><br>
 
         <label for="dateOfBirth">Date of Birth:</label>
         <input type="date" name="dateOfBirth" required><br>
@@ -41,5 +44,27 @@
 
         <button type="submit">Submit Request</button>
     </form>
+
+    <script>
+        const passwordInput = document.getElementById("passwordInput");
+        const passwordError = document.getElementById("passwordError");
+
+        passwordInput.addEventListener("input", () => {
+            if (!isValidPassword(passwordInput.value)) {
+                passwordError.style.display = "block";
+            } else {
+                passwordError.style.display = "none";
+            }
+        });
+
+        function isValidPassword(password) {
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$%^&*])/;
+            return regex.test(password);
+        }
+
+        function validateForm() {
+            return isValidPassword(passwordInput.value);
+        }
+    </script>
 </body>
 </html>

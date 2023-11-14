@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Registration</title>
 </head>
 <body>
     <h1>Patient Registration</h1>
-    <form action="/guest/createPatient" method="POST">
+    <form action="/guest/createPatient" method="POST" onsubmit="return validateForm()">
         <label for="username">Username:</label>
         <input type="text" name="username" required><br>
 
@@ -16,7 +18,12 @@
         <input type="email" name="email" required><br>
 
         <label for="password">Password:</label>
-        <input type="password" name="password" required><br>
+        <input type="password" id="password" name="password" required>
+        <div id="passwordError" style="color: red; display: none;">
+            Password must contain at least 1 uppercase letter, 1 lowercase letter, no spaces, and at least 1 special symbol.
+        </div>
+
+        <br>
 
         <label for="dateOfBirth">Date of Birth:</label>
         <input type="date" name="dateOfBirth" required><br>
@@ -26,7 +33,6 @@
             <option value="Male">Male</option>
             <option value="Female">Female</option>
         </select><br>
-
 
         <label for="mobileNumber">Mobile Number:</label>
         <input type="tel" name="mobileNumber" required><br>
@@ -41,7 +47,32 @@
         <label for="emergencyContact[relation]">Relation to the Patient:</label>
         <input type="text" name="emergencyContact[relation]" required><br>
 
-        <button type="submit">Register</button>
+        <button type="submit" id="submitButton" disabled>Register</button>
     </form>
+
+    <script>
+        const newPasswordInput = document.getElementById("password");
+        const passwordError = document.getElementById("passwordError");
+        const submitButton = document.getElementById("submitButton");
+
+        newPasswordInput.addEventListener("input", () => {
+            if (!isValidPassword(newPasswordInput.value)) {
+                passwordError.style.display = "block";
+                submitButton.disabled = true;
+            } else {
+                passwordError.style.display = "none";
+                submitButton.disabled = false;
+            }
+        });
+
+        function isValidPassword(password) {
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$%^&*])/;
+            return regex.test(password);
+        }
+
+        function validateForm() {
+            return isValidPassword(newPasswordInput.value);
+        }
+    </script>
 </body>
 </html>
