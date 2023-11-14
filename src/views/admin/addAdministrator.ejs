@@ -8,18 +8,24 @@
   <form id="addadminform">
     <label>
       Username:
-      <input type="text" id="username" />
+      <input type="text" id="username" required/>
     </label>
     <br />
     <label>
       Password:
-      <input type="password" id="password" />
+      <input type="password" id="password" required/>
     </label>
+    <div id="passwordError" style="color: red; display: none;">
+      Password must contain at least 1 uppercase letter, 1 lowercase letter, no spaces, and at least 1 special symbol.
+    </div>
     <br />
     <label>
       Email:
-      <input type="email" id="email" />
+      <input type="email" id="email" required/>
     </label>
+    <div id="emailError" style="color: red; display: none;">
+      Please enter a valid email address.
+    </div>
     <br />
     <button type="submit" id="addadminbutton">Add Administrator</button>
   </form>
@@ -32,6 +38,8 @@
     const pass = document.getElementById('password');
     const em = document.getElementById('email');
     const message = document.getElementById('message');
+    const passwordError = document.getElementById('passwordError');
+    const emailError = document.getElementById('emailError');
     const addButton = document.getElementById('addadminbutton');
 
     addButton.addEventListener('click', (event) => {
@@ -41,8 +49,33 @@
       const password = pass.value;
       const email = em.value;
 
+      if (!isValidPassword(password)) {
+        passwordError.style.display = 'block';
+        return;
+      }
+
+      passwordError.style.display = 'none';
+
+      if (!isValidEmail(email)) {
+        emailError.style.display = 'block';
+        return;
+      }
+
+      emailError.style.display = 'none';
+
       addAdministrator(username, password, email);
     });
+
+    function isValidPassword(password) {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$%^&*])/;
+      return regex.test(password);
+    }
+
+    function isValidEmail(email) {
+      // Basic email validation using a regular expression
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
 
     function addAdministrator(username, password, email) {
       fetch('/admin/addadministrator', {
