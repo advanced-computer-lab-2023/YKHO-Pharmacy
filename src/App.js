@@ -1,5 +1,18 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
+// Use cors middleware
+app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+
+
 const port = process.env.PORT || 8000;
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -142,36 +155,43 @@ app.get('/fetchFile', async (req, res) => {
 
 
 //login
-app.get('/', (req, res) => {
+app.get('/login', (req, res) => {
   res.render('login');
 });
 
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  const admin = await Administrator.findOne({ username });
+    const admin = await Administrator.findOne({ username });
 
-  if (admin && admin.password === password) {
-    req.session.user = admin;
-    return res.redirect('/admin/adminHome');
+    if (admin && admin.password === password) {
+      req.session.user = admin;
+      return res.json({ userType: 'admin' });
+    }
+
+    const patient = await Patient.findOne({ username });
+
+    if (patient && patient.password === password) {
+      req.session.user = patient;
+      return res.json({ userType: 'patient' });
+    }
+
+    const pharmacist = await Pharmacist.findOne({ username });
+
+    if (pharmacist && pharmacist.password === password) {
+      req.session.user = pharmacist;
+      return res.json({ userType: 'pharmacist' });
+    }
+
+     res.status(401).json({ error: 'Invalid username or password' });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ error: 'Internal server error during login' });
   }
-
-  const patient = await Patient.findOne({ username });
-
-  if (patient && patient.password === password) {
-    req.session.user = patient;
-    return res.redirect('/patient/patientHome');
-  }
-
-  const pharmacist = await Pharmacist.findOne({ username });
-
-  if (pharmacist && pharmacist.password === password) {
-    req.session.user = pharmacist;
-    return res.redirect('/pharmacist/pharmacistHome');
-  }
-
-  res.status(401).json({ message: 'Invalid username or password' });
 });
+
+
 
 //logout
 app.get('/logout', (req, res) => {
@@ -179,7 +199,7 @@ app.get('/logout', (req, res) => {
     if (err) {
       console.error(err);
     }
-    res.redirect('/');
+    res.redirect('/login');
   });
 });
 
@@ -188,7 +208,7 @@ function isAuthenticated(req, res, next) {
   if (req.session.user) {
     next();
   } else {
-    res.redirect('/');
+    res.redirect('/login');
   }
 }
 
