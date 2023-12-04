@@ -30,7 +30,7 @@
         </thead>
         <tbody>
             <% medicines.forEach(medicine => { %>
-                <% if (medicine.quantity > 0) { %>
+                <% if (medicine.quantity > 0 && !medicine.archived) { %>
                     <tr>
                         <td><img src="<%= medicine.image %>" alt="Medicine Image" style="width: 200px; height: 150px;"></td>
                         <td><%= medicine.name %></td>

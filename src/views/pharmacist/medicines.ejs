@@ -27,6 +27,8 @@
                 <th>Quantity</th>
                 <th>Sales</th>
                 <th>Price</th>
+                <th>Archive</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +42,7 @@
                     <td><%= medicine.quantity %></td>
                     <td><%= medicine.sales %></td>
                     <td><%= medicine.price %></td>
+                    <td><%= medicine.archived %></td>
                     <td>
                         <form action="/pharmacist/edit" method="POST">
                             <input type="hidden" name="name" value="<%= medicine.name %>">
@@ -48,12 +51,16 @@
                             <input type="hidden" name="medUse" value="<%= medicine.medUse %>">
                             <input type="hidden" name="price" value="<%= medicine.price %>">
                             <button type="submit">Edit</button>
-                        </form>                        
+                        </form>
+                        <form action="/pharmacist/archive/<%= medicine._id %>" method="POST">
+                            <button type="submit">Archive/Unarchive</button>
+                        </form>
                     </td>
                 </tr>
             <% }); %>
         </tbody>
     </table>
+
     <a href="/logout"><button>Logout</button></a>
 </body>
 </html>

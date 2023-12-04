@@ -12,9 +12,15 @@ const port = process.env.PORT || 8000;
 const mongoose = require('mongoose');
 const multer = require('multer');
 const RegRequest = require('./model/regRequest');
+const http = require('http');
+const socketServer = require('./socketServer');
+const cors = require('cors');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const server = http.createServer(app);
+const io = socketServer.initializeSocket(server);
+app.use(cors());
 
 require('dotenv').config();
 
@@ -103,6 +109,8 @@ app.post('/patient/failedOrder', isAuthenticated, patientController.failedOrder)
 app.get('/patient/failure', isAuthenticated, patientController.getfailurePage);
 app.get('/patient/orders',isAuthenticated,patientController.getorders);
 app.post('/patient/cancelOrder', isAuthenticated, patientController.cancelOrder);
+app.get('/patient/wallet',isAuthenticated,patientController.viewWalletAmount);
+app.get('/patient/chat', isAuthenticated,patientController.chat);
 
 //pharmacist
 app.get('/pharmacist/pharmacistHome', isAuthenticated,pharmacistController.home)
@@ -117,6 +125,10 @@ app.get('/pharmacist/change-password', isAuthenticated, pharmacistController.cha
 app.post('/pharmacist/change-password', pharmacistController.changePassword);
 app.get('/pharmacist/resetPassword', pharmacistController.resetPasswordPage);
 app.post('/pharmacist/resetPassword', pharmacistController.resetPassword);
+app.post('/pharmacist/archive/:medicineId', pharmacistController.toggleMedicineStatus);
+app.get('/pharmacist/wallet',isAuthenticated,pharmacistController.viewWalletAmount);
+app.get('/pharmacist/chat', isAuthenticated,pharmacistController.chat);
+app.get('/pharmacist/notifications', isAuthenticated,pharmacistController.getAllNotifications);
 
 //guest
 app.get('/guest/guestHome',guestController.home)

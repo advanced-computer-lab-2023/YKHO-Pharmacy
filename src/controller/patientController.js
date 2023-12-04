@@ -2,6 +2,11 @@ const Medicine = require('../model/medicine');
 const Patient = require('../model/patient');
 const Order = require('../model/order');
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
+const path = require('path');
+const io = require('socket.io-client');
+const sendOutOfStockEmail = require('../sendOutOfStockEmail');
+const Notification = require('../model/notification');
+const Pharmacist = require('../model/pharmacist');
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -277,7 +282,7 @@ exports.checkout = async (req, res) => {
     const username = req.session.user.username;
     const patient = await Patient.findOne({ username });
     const totalAmount = calculateTotalAmount(patient.shoppingCart);
-    
+
     // Check if the payment method is "wallet"
     if (paymentMethod === 'wallet') {
       // Check if the patient has sufficient balance in the wallet
@@ -286,7 +291,7 @@ exports.checkout = async (req, res) => {
       } else {
         return res.status(400).json({ message: 'Insufficient funds in the wallet' });
       }
-    } else if (paymentMethod === 'creditCard'){
+    } else if (paymentMethod === 'creditCard') {
       const order = new Order({
         username: username,
         shoppingCart: patient.shoppingCart,
@@ -300,7 +305,7 @@ exports.checkout = async (req, res) => {
         payment_method_types: ['card'],
         mode: 'payment',
         line_items: patient.shoppingCart.map(item => {
-          return{
+          return {
             price_data: {
               currency: 'usd',
               product_data: {
@@ -318,6 +323,7 @@ exports.checkout = async (req, res) => {
       // Redirect to the Stripe Checkout page
       return res.redirect(session.url);
     }
+
     // Create a new order in the database
     const order = new Order({
       username: username,
@@ -336,8 +342,24 @@ exports.checkout = async (req, res) => {
         medicine.quantity -= parseInt(item.quantity, 10);
         medicine.sales = parseInt(medicine.sales, 10) + parseInt(item.quantity, 10);
 
+
         // Save the updated medicine
         await medicine.save();
+
+        // Check if the medicine quantity is zero
+        if (medicine.quantity === '0') {
+          const pharmacists = await Pharmacist.find({ /* Add appropriate conditions to identify pharmacists */ });
+
+          // Add a message to the notifications model
+          const notificationMessage = `Medicine "${medicine.name}" is out of stock.`;
+          await addNotification(notificationMessage);
+
+          for (const pharmacist of pharmacists) {
+            const pharmacistEmail = pharmacist.email;
+            const medicineName = medicine.name;
+            await sendOutOfStockEmail(pharmacistEmail, medicineName);
+          }
+        }
       } else {
         console.error(`Medicine not found: ${item.medicineName}`);
       }
@@ -354,9 +376,44 @@ exports.checkout = async (req, res) => {
   }
 };
 
+// Helper function to add a notification message to the notifications model
+const addNotification = async (message) => {
+  try {
+    const newNotification = new Notification({
+      message,
+    });
+    await newNotification.save();
+  } catch (error) {
+    console.error('Error adding notification:', error);
+  }
+};
+
 // Helper function to calculate the total amount from the shopping cart
 const calculateTotalAmount = (shoppingCart) => {
   return shoppingCart.reduce((total, item) => total + item.medicinePrice * item.quantity, 0);
+};
+
+const calculateTotalRefundAmount = async (shoppingCart) => {
+  try {
+    let total = 0;
+
+    for (const item of shoppingCart) {
+      const medicine = await Medicine.findOne({ name: item.medicineName });
+
+      if (medicine) {
+        const price = parseFloat(medicine.price);
+
+        total += price * item.quantity;
+      } else {
+        console.error(`Medicine not found: ${item.medicineName}`);
+      }
+    }
+
+    return total;
+  } catch (error) {
+    console.error('Error calculating total amount:', error);
+    throw error;
+  }
 };
 
 exports.emptyCart = async (req, res) => {
@@ -416,6 +473,15 @@ exports.cancelOrder = async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
+    // Check if the payment method is not cash on delivery
+    if (order.paymentMethod == 'cashOnDelivery') {
+      // Refund amount to the wallet
+      const patient = await Patient.findOne({ username: order.username });
+      const totalAmount = await calculateTotalRefundAmount(order.shoppingCart);
+      patient.wallet += totalAmount;
+      await patient.save();
+    }
+
     for (const item of order.shoppingCart) {
       const medicine = await Medicine.findOne({ name: item.medicineName });
   
@@ -437,6 +503,23 @@ exports.cancelOrder = async (req, res) => {
   }
 };
 
+exports.viewWalletAmount = async (req, res) => {
+  try {
+    const username = req.session.user.username;
+
+    const patient = await Patient.findOne({ username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const walletAmount = patient.wallet;
+    res.status(200).json({ walletAmount });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
 
 exports.getsuccessPage = (req, res) => {
   res.render('patient/success', { message: null });
@@ -455,11 +538,35 @@ exports.resetPasswordPage = (req, res) => {
 };
 
 exports.home = async (req, res) => {
-  res.render('patient/patientHome');
+  try {
+    const walletAmount = req.session.user.wallet;
+
+    res.render('patient/patientHome', { walletAmount });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
+exports.chat = (req, res) => {
+  const patientUsername = req.session.user.username;
 
+  res.render('patient/chat', { patientUsername });
 
+  const socket = io('http://localhost:8000');
+
+  socket.on('connect', () => {
+    console.log('Connected to Socket.io server');
+    socket.emit('join', { username: patientUsername, userType: 'patient' });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Disconnected from Socket.io server');
+  });
+
+  socket.on('chat message', (msg) => {
+    console.log('Received message:', msg);
+  });
+};
 
 
 // const PayByCredit = async (req, res) => {

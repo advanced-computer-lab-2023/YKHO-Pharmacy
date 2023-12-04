@@ -63,10 +63,12 @@
                                         <td rowspan="<%= order.shoppingCart.length %>"><%= order.paymentMethod %></td>
                                         <td rowspan="<%= order.shoppingCart.length %>"><%= order.status %></td>
                                         <td rowspan="<%= order.shoppingCart.length %>">
-                                            <form action="/patient/cancelOrder" method="POST">
-                                                <input type="hidden" name="orderId" value="<%= order._id %>">
-                                                <button type="submit" class="cancel-btn">Cancel Order</button>
-                                            </form>
+                                            <% if (order.status !== 'canceled') { %>
+                                                <form action="/patient/cancelOrder" method="POST">
+                                                    <input type="hidden" name="orderId" value="<%= order._id %>">
+                                                    <button type="submit" class="cancel-btn">Cancel Order</button>
+                                                </form>
+                                            <% } %>
                                         </td>
                                     <% } %>
                                 </tr>

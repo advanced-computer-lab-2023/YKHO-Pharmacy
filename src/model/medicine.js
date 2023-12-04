@@ -33,6 +33,14 @@ const medicineSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  needPres: {
+    type: Boolean,
+    default: false,
+  },
+  archived: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model('Medicine', medicineSchema);
