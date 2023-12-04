@@ -14,8 +14,6 @@ const multer = require('multer');
 const RegRequest = require('./model/regRequest');
 const http = require('http');
 const socketServer = require('./socketServer');
-const cors = require('cors');
-
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const server = http.createServer(app);
@@ -86,6 +84,8 @@ app.get('/admin/change-password', adminController.changePasswordPage);
 app.post('/admin/change-password', adminController.changePassword);
 app.get('/admin/resetPassword', adminController.resetPasswordPage);
 app.post('/admin/resetPassword', adminController.resetPassword);
+app.get('/admin/salesReport', isAuthenticated, adminController.sales);
+app.post('/admin/salesReport', isAuthenticated, adminController.getOrdersByMonth);
 
 //patient
 app.get('/patient/patientHome', isAuthenticated,patientController.home)
@@ -129,6 +129,11 @@ app.post('/pharmacist/archive/:medicineId', pharmacistController.toggleMedicineS
 app.get('/pharmacist/wallet',isAuthenticated,pharmacistController.viewWalletAmount);
 app.get('/pharmacist/chat', isAuthenticated,pharmacistController.chat);
 app.get('/pharmacist/notifications', isAuthenticated,pharmacistController.getAllNotifications);
+app.get('/pharmacist/salesReport', isAuthenticated, pharmacistController.sales);
+app.post('/pharmacist/salesReport', isAuthenticated, pharmacistController.getOrdersByMonth);
+app.get('/pharmacist/allSoldMedicinesReport', isAuthenticated, pharmacistController.allSoldMedicines);
+app.get('/pharmacist/filterMedicinesByName', isAuthenticated, pharmacistController.filterMedicinesByName);
+app.get('/pharmacist/filterMedicinesByDate', isAuthenticated, pharmacistController.filterMedicinesByDate);
 
 //guest
 app.get('/guest/guestHome',guestController.home)

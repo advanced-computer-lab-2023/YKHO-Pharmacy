@@ -297,7 +297,8 @@ exports.checkout = async (req, res) => {
         shoppingCart: patient.shoppingCart,
         deliveryAdd: deliveryAddress,
         paymentMethod: paymentMethod,
-        status: 'pending payment'
+        status: 'pending payment',
+        orderDate: new Date(), // Set the order date to the current date and time
       });
       await order.save();
       // Create a Stripe Checkout session
@@ -330,6 +331,7 @@ exports.checkout = async (req, res) => {
       shoppingCart: patient.shoppingCart,
       deliveryAdd: deliveryAddress,
       paymentMethod: paymentMethod,
+      orderDate: new Date(), // Set the order date to the current date and time
     });
     await order.save();
 
@@ -342,12 +344,11 @@ exports.checkout = async (req, res) => {
         medicine.quantity -= parseInt(item.quantity, 10);
         medicine.sales = parseInt(medicine.sales, 10) + parseInt(item.quantity, 10);
 
-
         // Save the updated medicine
         await medicine.save();
 
         // Check if the medicine quantity is zero
-        if (medicine.quantity === '0') {
+        if (medicine.quantity === 0) {
           const pharmacists = await Pharmacist.find({ /* Add appropriate conditions to identify pharmacists */ });
 
           // Add a message to the notifications model
@@ -474,7 +475,7 @@ exports.cancelOrder = async (req, res) => {
     }
 
     // Check if the payment method is not cash on delivery
-    if (order.paymentMethod == 'cashOnDelivery') {
+    if (order.paymentMethod != 'cashOnDelivery') {
       // Refund amount to the wallet
       const patient = await Patient.findOne({ username: order.username });
       const totalAmount = await calculateTotalRefundAmount(order.shoppingCart);

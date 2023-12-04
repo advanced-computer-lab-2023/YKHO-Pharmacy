@@ -3,6 +3,7 @@ const Administrator = require('../model/administrator');
 const Pharmacist = require('../model/pharmacist');
 const Patient = require('../model/patient');
 const RegRequest = require('../model/regRequest');
+const Order = require('../model/order');
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -222,9 +223,9 @@ exports.patientRemove = async (req, res) => {
   res.render('admin/removePatient');
 };
 
-
-
- 
+exports.sales = async (req, res) => {
+  res.render('admin/salesReport');
+};
 
 exports.acceptRequest = async (req, res) => {
   const { requestId } = req.body;
@@ -278,6 +279,43 @@ exports.rejectRequest = async (req, res) => {
   }
 };
 
+exports.getOrdersByMonth = async (req, res) => {
+  try {
+    const { month } = req.body;
 
+    if (!month) {
+      return res.status(400).json({ error: 'Month parameter is missing.' });
+    }
 
+    const parsedMonth = parseInt(month, 10);
 
+    if (isNaN(parsedMonth) || parsedMonth < 1 || parsedMonth > 12) {
+      return res.status(400).json({ error: 'Invalid month parameter.' });
+    }
+
+    const orders = await Order.find({
+      $expr: {
+        $eq: [{ $month: '$orderDate' }, parsedMonth],
+      },
+      status: 'placed',
+    });
+
+    let totalSales = 0;
+
+    for (const order of orders) {
+      for (const item of order.shoppingCart) {
+        const medicine = await Medicine.findOne({ name: item.medicineName });
+
+        if (medicine) {
+          totalSales += parseInt(medicine.sales, 10);
+        } else {
+          console.error(`Medicine not found: ${item.medicineName}`);
+        }
+      }
+    }
+
+    res.render('admin/totalSales', { totalSales });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

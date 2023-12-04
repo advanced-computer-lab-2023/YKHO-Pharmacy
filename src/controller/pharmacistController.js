@@ -3,6 +3,7 @@ const Pharmacist = require('../model/pharmacist');
 const path = require('path');
 const io = require('socket.io-client');
 const Notification = require('../model/notification');
+const Order = require('../model/order');
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -252,4 +253,155 @@ exports.getAllNotifications = async (req, res) => {
   }
 };
 
+exports.getOrdersByMonth = async (req, res) => {
+  try {
+    const { month } = req.body;
 
+    if (!month) {
+      return res.status(400).json({ error: 'Month parameter is missing.' });
+    }
+
+    const parsedMonth = parseInt(month, 10);
+
+    if (isNaN(parsedMonth) || parsedMonth < 1 || parsedMonth > 12) {
+      return res.status(400).json({ error: 'Invalid month parameter.' });
+    }
+
+    const orders = await Order.find({
+      $expr: {
+        $eq: [{ $month: '$orderDate' }, parsedMonth],
+      },
+      status: 'placed',
+    });
+
+    let totalSales = 0;
+
+    for (const order of orders) {
+      for (const item of order.shoppingCart) {
+        const medicine = await Medicine.findOne({ name: item.medicineName });
+
+        if (medicine) {
+          totalSales += parseInt(medicine.sales, 10);
+        } else {
+          console.error(`Medicine not found: ${item.medicineName}`);
+        }
+      }
+    }
+
+    res.render('pharmacist/totalSales', { totalSales });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.sales = async (req, res) => {
+  res.render('pharmacist/salesReport');
+};
+
+exports.allSoldMedicines = async (req, res) => {
+  try {
+    const orders = await Order.find({ status: 'placed' });
+
+    let medicineDetails = [];
+
+    for (const order of orders) {
+      for (const item of order.shoppingCart) {
+        const medicine = await Medicine.findOne({ name: item.medicineName });
+
+        if (medicine) {
+          const saleDetails = {
+            medicineName: medicine.name,
+            sales: parseInt(medicine.sales, 10),
+            orderDate: order.orderDate,
+          };
+          medicineDetails.push(saleDetails);
+        } else {
+          console.error(`Medicine not found: ${item.medicineName}`);
+        }
+      }
+    }
+
+    res.render('pharmacist/allSoldMedicinesReport', { medicineDetails });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.filterMedicinesByName = async (req, res) => {
+  try {
+    const { medicineName } = req.query;
+
+    if (!medicineName) {
+      return res.status(400).json({ error: 'Medicine name parameter is missing.' });
+    }
+
+    const orders = await Order.find({ status: 'placed' });
+
+    let filteredMedicineDetails = [];
+
+    for (const order of orders) {
+      for (const item of order.shoppingCart) {
+        const medicine = await Medicine.findOne({ name: item.medicineName });
+
+        if (medicine && medicine.name.toLowerCase().includes(medicineName.toLowerCase())) {
+          const saleDetails = {
+            medicineName: medicine.name,
+            sales: parseInt(medicine.sales, 10),
+            orderDate: order.orderDate,
+          };
+          filteredMedicineDetails.push(saleDetails);
+        } else {
+          console.error(`Medicine not found or does not match the search criteria: ${item.medicineName}`);
+        }
+      }
+    }
+
+    if (filteredMedicineDetails.length > 0) {
+      res.render('pharmacist/allSoldMedicinesReport', { medicineDetails: filteredMedicineDetails });
+    } else {
+      res.render('pharmacist/allSoldMedicinesReport', { medicineDetails: [] });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.filterMedicinesByDate = async (req, res) => {
+  try {
+    const { date } = req.query;
+
+    if (!date) {
+      return res.status(400).json({ error: 'Date parameter is missing.' });
+    }
+
+    const orders = await Order.find({
+      $expr: {
+        $eq: [{ $dateToString: { format: '%Y-%m-%d', date: '$orderDate' } }, date],
+      },
+      status: 'placed',
+    });
+
+    let medicineDetails = [];
+
+    for (const order of orders) {
+      for (const item of order.shoppingCart) {
+        const medicine = await Medicine.findOne({ name: item.medicineName });
+
+        if (medicine) {
+          const saleDetails = {
+            medicineName: medicine.name,
+            sales: parseInt(medicine.sales, 10),
+            orderDate: order.orderDate,
+          };
+          medicineDetails.push(saleDetails);
+        } else {
+          console.error(`Medicine not found: ${item.medicineName}`);
+        }
+      }
+    }
+
+    res.render('pharmacist/allSoldMedicinesReport', { medicineDetails });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Sold Medicines Report</title>
+</head>
+<body>
+    <h1>All Sold Medicines Report</h1>
+
+    <form action="/pharmacist/filterMedicinesByName" method="GET">
+        <label for="medicineName">Filter by Medicine Name:</label>
+        <input type="text" id="medicineName" name="medicineName" required>
+        <button type="submit">Filter</button>
+    </form>
+
+    <form action="/pharmacist/filterMedicinesByDate" method="GET">
+        <label for="date">Filter by Date:</label>
+        <input type="date" id="date" name="date" required>
+        <button type="submit">Filter</button>
+    </form>
+
+    <% if (medicineDetails.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Sales</th>
+                    <th>Order Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% medicineDetails.forEach((detail) => { %>
+                    <tr>
+                        <td><%= detail.medicineName %></td>
+                        <td><%= detail.sales %></td>
+                        <td><%= detail.orderDate %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No sold medicines found in the system.</p>
+    <% } %>
+
+</body>
+</html>
