@@ -7,7 +7,7 @@ const RegRequest = require('../model/regRequest');
 exports.getMedicines = async (req, res) => {
   try {
     const medicines = await Medicine.find();
-    res.render('admin/medicines', { medicines });
+    res.json({ medicines });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -28,6 +28,7 @@ exports.addAdministrator = async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
+    console.log(req.session.user.username);
     // Check if username already exists
     const existingAdministrator = await Administrator.findOne({ username });
     if (existingAdministrator) {
@@ -123,7 +124,7 @@ exports.getRequests = async (req, res) => {
       workingLicenseFileURL: request.workingLicenseFile ? `/uploads/${request._id}/workingLicenseFile` : null,
     }));
 
-    res.render('admin/getRequests', { getRequests: requestsWithFileURLs });
+    res.json({ getRequests: requestsWithFileURLs });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

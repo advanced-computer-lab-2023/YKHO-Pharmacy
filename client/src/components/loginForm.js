@@ -15,11 +15,7 @@ const LoginForm = ({ onLogin }) => {
       const response = await axios.post('http://localhost:8000/login', {
         username,
         password,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      }, {withCredentials: true});
   
       const { userType } = await response.data;
       if (response.status === 200) {

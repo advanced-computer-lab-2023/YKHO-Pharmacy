@@ -1,4 +1,5 @@
 const Patient = require('../model/patient');
+const Pharmacist = require('../model/pharmacist');
 const RegRequest = require('../model/regRequest');
 
 exports.createPatient = async (req, res) => {
@@ -56,13 +57,20 @@ exports.createRequest = async (req, res) => {
       educationalBackground,
     } = req.body;
 
+    const existingPharm = await Pharmacist.findOne({
+      $or: [{ username }, { email }],
+    });
+    const existingReq = await RegRequest.findOne({
+      $or: [{ username }, { email }],
+    });
+
+    if (existingPharm || existingReq) {
+      return res.status(400).json({ error: 'Pharmacist with the same username or email already exists' });
+    }
+
     const idFile = req.files?.idFile?.[0];
     const medicalDegreeFile = req.files?.medicalDegreeFile?.[0];
     const workingLicenseFile = req.files?.workingLicenseFile?.[0];
-
-    if (!idFile || !medicalDegreeFile || !workingLicenseFile) {
-      return res.status(400).json({ error: 'Missing one or more required files' });
-    }
 
     const newRequest = new RegRequest({
       username,

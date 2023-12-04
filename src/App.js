@@ -2,15 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 // Use cors middleware
-app.use(cors());
-const corsOptions = {
+app.use(cors({ 
   origin: 'http://localhost:3000',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-  optionsSuccessStatus: 204,
-};
-
-app.use(cors(corsOptions));
+}));
 
 
 const port = process.env.PORT || 8000;
@@ -44,7 +39,7 @@ db.once('open', () => {
 
 const session = require('express-session');
 app.use(session({
-  secret: 'your-secret-key',
+  secret: 'your-secret-key', // Replace with a strong secret key
   resave: false,
   saveUninitialized: true,
 }));
@@ -248,6 +243,7 @@ app.post('/request-reset', async (req, res) => {
   const otp = generateOTP();
 
   req.session.otp = otp;
+  console.log("Sent OTP: ", req.session.otp);
 
   const mailOptions = {
     from: 'yoyo_ah360@hotmail.com',
@@ -266,19 +262,26 @@ app.post('/request-reset', async (req, res) => {
   });
 });
 
+app.use((req, res, next) => {
+  console.log('Session:', req.session);
+  next();
+});
+
 app.post('/verify-otp', (req, res) => {
   const { otp } = req.body;
-
+  
+  console.log("Recieved OTP: ", otp);
+  console.log("Saved OTP: ", req.session.otp);
   if (otp === req.session.otp) {
     const userType = req.session.userType;
-
+    
     if (userType === 'patient') {
-      return res.redirect('/patient/resetPassword');
+      return res.json({ userType: 'patient' });
     } else if (userType === 'pharmacist') {
-      return res.redirect('/pharmacist/resetPassword');
+      return res.json({ userType: 'pharmacist' });
     } else {
-      return res.redirect('/admin/resetPassword');
-    }
+      return res.json({ userType: 'admin' });
+    }    
   } else {
     return res.status(401).json({ message: 'Invalid OTP' });
   }

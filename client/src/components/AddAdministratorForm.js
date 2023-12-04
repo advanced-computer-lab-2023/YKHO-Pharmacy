@@ -31,11 +31,8 @@ const AddAdministratorForm = () => {
         username,
         password,
         email,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      }, {withCredentials: true},
+      );
 
       const data = response.data;
       setMessage(data.message);
@@ -86,7 +83,7 @@ const AddAdministratorForm = () => {
         <br />
         <button type="submit">Add Administrator</button>
       </form>
-      <p id="message">{message}</p>
+      <p id="message" className='center-aligned'>{message}</p>
     </div>
   );
 };

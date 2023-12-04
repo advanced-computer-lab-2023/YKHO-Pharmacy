@@ -1,4 +1,4 @@
-/* App.css (or any other stylesheet file) */
+/* App.css */
 
 body {
   font-family: 'Arial', sans-serif;
@@ -7,7 +7,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh; /* Use min-height instead of height */
+  overflow: auto; /* Ensure that the body can be scrolled if content exceeds viewport */
 }
 
 .container {
@@ -17,6 +18,8 @@ body {
   padding: 20px;
   width: 300px;
   text-align: center;
+  position: relative; /* Add position property */
+  z-index: 1; /* Add z-index property */
 }
 
 h1 {
@@ -71,4 +74,95 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+.center-aligned {
+  text-align: center; /* Center-align the h2 element */
+}
+
+/* Add this CSS for styling the RequestsList component */
+.center-aligned {
+  text-align: center;
+}
+
+.header-text {
+  color: #333;
+}
+
+.requests-table {
+  width: 100%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  overflow-x: auto;
+}
+
+.requests-table th,
+.requests-table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #dee2e6;
+}
+
+.requests-table thead {
+  background-color: #f8f9fa;
+}
+
+.requests-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.file-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.file-link:hover {
+  text-decoration: underline;
+}
+
+.accept-button {
+  background-color: #28a745; /* Green color */
+  color: white;
+  padding: 4px 8px; /* Smaller padding */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px; /* Added more space between buttons */
+}
+
+.accept-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.reject-button {
+  background-color: #dc3545; /* Red color */
+  color: white;
+  padding: 4px 8px; /* Smaller padding */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reject-button:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+.action-form {
+  display: inline-block;
+}
+
+.no-requests {
+  color: #666;
+}
+
+.loading-text {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.action-cell {
+  white-space: nowrap;
 }

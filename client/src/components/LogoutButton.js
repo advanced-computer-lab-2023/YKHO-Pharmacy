@@ -5,7 +5,7 @@ import axios from 'axios';
 const LogoutButton = ({ onLogout }) => {
   const handleLogout = async () => {
     try {
-      await axios.get('http://localhost:8000/logout');
+      await axios.get('http://localhost:8000/logout', {withCredentials: true});
       // Assuming the server will handle session destruction and redirect
       // If needed, you might want to handle client-side cleanup here
       onLogout(); // Invoke the onLogout callback

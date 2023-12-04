@@ -6,7 +6,7 @@ import LoginForm from './loginForm';
 const LoginPage = ({ onLogin }) => {
   return (
     <div>
-      <h1>Welcome</h1>
+      <h1 className="center-aligned">Welcome</h1>
       <LoginForm onLogin={onLogin} />
     </div>
   );
