@@ -288,7 +288,7 @@ exports.getOrdersByMonth = async (req, res) => {
       }
     }
 
-    res.render('pharmacist/totalSales', { totalSales });
+    res.json({ totalSales });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -321,7 +321,7 @@ exports.allSoldMedicines = async (req, res) => {
       }
     }
 
-    res.render('pharmacist/allSoldMedicinesReport', { medicineDetails });
+    res.json({ medicineDetails });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -357,9 +357,9 @@ exports.filterMedicinesByName = async (req, res) => {
     }
 
     if (filteredMedicineDetails.length > 0) {
-      res.render('pharmacist/allSoldMedicinesReport', { medicineDetails: filteredMedicineDetails });
+      res.json({ medicineDetails: filteredMedicineDetails });
     } else {
-      res.render('pharmacist/allSoldMedicinesReport', { medicineDetails: [] });
+      res.json({ medicineDetails: [] });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -400,7 +400,7 @@ exports.filterMedicinesByDate = async (req, res) => {
       }
     }
 
-    res.render('pharmacist/allSoldMedicinesReport', { medicineDetails });
+    res.json({ medicineDetails });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

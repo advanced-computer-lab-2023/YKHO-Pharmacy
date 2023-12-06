@@ -51,6 +51,12 @@ const PharmacistHomePage = ({ onLogout }) => {
         <Link to="/pharmacist/createMedicines" className="home-button">
           Create Medicine
         </Link>
+        <Link to="/pharmacist/allSoldMedicinesReport" className="home-button">
+          All Sales Report
+        </Link>
+        <Link to="/pharmacist/totalSalesByMonth" className="home-button">
+          Monthly Sales Report
+        </Link>
         <Link to="/pharmacist/chat" className="home-button">
           Chat With Patient
         </Link>

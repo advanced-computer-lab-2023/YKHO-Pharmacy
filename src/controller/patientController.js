@@ -464,7 +464,7 @@ exports.cancelOrder = async (req, res) => {
     const { orderId } = req.body;
     
     const order = await Order.findOneAndUpdate(
-      { _id: orderId, status: 'placed' },
+      { _id: orderId},
       { $set: { status: 'canceled' } },
       { new: true } // Return the updated document
     );

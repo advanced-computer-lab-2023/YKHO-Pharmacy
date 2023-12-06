@@ -27,6 +27,9 @@ import ShoppingCart from './components/ShoppingCart';
 import Checkout from './components/Checkout';
 import OrderSuccessPage from './components/OrderSuccessPage';
 import FailedOrderPage from './components/FailedOrderPage';
+import OrdersPage from './components/OrdersPage';
+import AllSoldMedicinesReport from './components/AllSoldMedicinesReport';
+import TotalSalesByMonth from './components/TotalSalesByMonth';
 
 const App = () => {
   const [userType, setUserType] = useState(null);
@@ -71,6 +74,7 @@ const App = () => {
              <Route path="patient/failure" element={<FailedOrderPage />} />
             <Route path="/patient/*" element={userType === 'patient' ? <PatientHomePage onLogout={handleLogout} /> : <Navigate to="/" />}>
              <Route path="medicines" element={<MedicinesListPatient />} />
+            <Route path="orders" element={<OrdersPage />} />
              <Route path="shoppingCart" element={<ShoppingCart />} />
              <Route path="checkout" element={<Checkout />} />
             </Route>
@@ -79,6 +83,8 @@ const App = () => {
             <Route path="medicines" element={<MedicinesListPharm />} />
             <Route path="notifications" element={<PharmacistNotifications />} />
             <Route path="createMedicines" element={<CreateMedicine />} />
+            <Route path="allSoldMedicinesReport" element={<AllSoldMedicinesReport />} />
+            <Route path="totalSalesByMonth" element={<TotalSalesByMonth />} />
             <Route path="editMedicine/:name/:dosage/:description/:medUse/:price" element={<EditMedicine />} />
             </Route>
 
