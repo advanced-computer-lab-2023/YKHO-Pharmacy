@@ -7,6 +7,7 @@ const io = require('socket.io-client');
 const sendOutOfStockEmail = require('../sendOutOfStockEmail');
 const Notification = require('../model/notification');
 const Pharmacist = require('../model/pharmacist');
+const moment = require('moment');
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -568,6 +569,90 @@ exports.chat = (req, res) => {
   });
 };
 
+// exports.presMed = async (req, res) => {
+//   try {
+//     const medicines = await Medicine.find({ needPres: true });
+//     res.render('patient/presMed', { medicines });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
+
+exports.getAlternativeMedicines = async (req, res) => {
+  try {
+    const { medicineName } = req.query;
+
+    if (!medicineName) {
+      return res.status(400).json({ error: 'Medicine name is missing.' });
+    }
+
+    const medicine = await Medicine.findOne({ name: medicineName });
+    
+    if (!medicine) {
+      return res.status(404).json({ error: 'Medicine not found.' });
+    }
+
+    const medUse = medicine.medUse;
+
+    const alternatives = await Medicine.find({
+      medUse: medUse,
+      name: { $ne: medicineName },
+    });
+
+    res.render('patient/alternativeMedicine', { medicineName, alternatives });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.handleFileUpload = async (req, res) => {
+  try {
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ error: 'No file uploaded.' });
+    }
+
+    if (file.mimetype !== 'text/plain') {
+      return res.status(400).json({ error: 'Invalid file type. Please upload a TXT file.' });
+    }
+
+    const content = file.buffer.toString('utf-8');
+    const lines = content.split('\n');
+
+    // Find the line that starts with "Date: "
+    const dateLine = lines.find(line => line.startsWith('Date: '));
+
+    if (!dateLine) {
+      return res.status(400).json({ error: 'Invalid file format. Date not found.' });
+    }
+
+    const fileDate = moment(dateLine.replace('Date: ', ''), 'YYYY-MM-DD');
+    const aWeekBeforeToday = moment().startOf('day').subtract(1, 'week');
+
+    if (fileDate.isBetween(aWeekBeforeToday, moment().startOf('day'))) {
+      const medicineNames = lines.map(line => line.trim());
+
+      const searchResults = await Promise.all(
+        medicineNames.map(async medicineName => {
+          const medicine = await Medicine.findOne({ name: medicineName });
+          return { medicineName, result: medicine };
+        })
+      );
+
+      res.render('patient/resultsMed', { searchResults });
+    } else {
+      res.status(400).json({ error: 'Outdated file. Date is not within a week before today.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+};
+
+exports.presMed = (req, res) => {
+  res.render('patient/presMed');
+};
 
 // const PayByCredit = async (req, res) => {
   

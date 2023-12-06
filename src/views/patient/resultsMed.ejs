@@ -1,0 +1,62 @@
+<!-- pressedMedicineList.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pressed Medicine List</title>
+</head>
+<body>
+    <h1>Pressed Medicine List</h1>
+
+    <% if (searchResults && searchResults.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Medicine Name</th>
+                    <th>Result</th>
+                    <th>Dosage</th>
+                    <th>Description</th>
+                    <th>Medicinal Use</th>
+                    <th>Price</th>
+                    <th>Stock Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% searchResults.slice(1).forEach(result => { %>
+                    <tr>
+                        <td><img src="<%= result.result ? result.result.image : '' %>" alt="Medicine Image" style="width: 200px; height: 150px;"></td>
+                        <td><%= result.medicineName %></td>
+                        <td><%= result.result ? 'Found' : 'Not Found' %></td>
+                        <td><%= result.result ? result.result.dosage : '' %></td>
+                        <td><%= result.result ? result.result.description : '' %></td>
+                        <td><%= result.result ? result.result.medUse : '' %></td>
+                        <td><%= result.result ? result.result.price : '' %></td>
+                        <td><%= result.result && result.result.quantity > 0 ? 'In Stock' : 'Out of Stock' %></td>
+                        <td>
+                            <% if (result.result && result.result.quantity > 0) { %>
+                                <form action="/patient/addToCart" method="POST">
+                                    <input type="hidden" name="medicineName" value="<%= result.medicineName %>">
+                                    <input type="hidden" name="medicinePrice" value="<%= result.result.price %>">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit">Add to Cart</button>
+                                </form>
+                            <% } else if (result.result) { %>
+                                <a href="/patient/medicines/alternative?medicineName=<%= result.medicineName %>"><button>View Alternative</button></a>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No results found.</p>
+    <% } %>
+
+    <a href="/patient/shoppingCart"><button>View Shopping Cart</button></a> 
+    <a href="/logout"><button>Logout</button></a> 
+</body>
+</html>

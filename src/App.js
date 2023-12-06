@@ -110,6 +110,11 @@ app.get('/patient/orders',isAuthenticated,patientController.getorders);
 app.post('/patient/cancelOrder', isAuthenticated, patientController.cancelOrder);
 app.get('/patient/wallet',isAuthenticated,patientController.viewWalletAmount);
 app.get('/patient/chat', isAuthenticated,patientController.chat);
+app.get('/patient/medicines/alternative', isAuthenticated,patientController.getAlternativeMedicines);
+app.get('/patient/presMed', isAuthenticated,patientController.presMed);
+app.post('/patient/presMed', isAuthenticated, upload.single('file'), patientController.handleFileUpload);
+
+
 
 //pharmacist
 app.get('/pharmacist/pharmacistHome', isAuthenticated,pharmacistController.home)

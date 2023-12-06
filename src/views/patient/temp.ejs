@@ -1,3 +1,5 @@
+<!-- medicineList.ejs -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,12 +27,13 @@
                 <th>Description</th>
                 <th>Medicinal Use</th>
                 <th>Price</th>
+                <th>Stock Status</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <% medicines.forEach(medicine => { %>
-                <% if (medicine.quantity > 0 && !medicine.archived) { %>
+                <% if (!medicine.archived && !medicine.needPres) { %>
                     <tr>
                         <td><img src="<%= medicine.image %>" alt="Medicine Image" style="width: 200px; height: 150px;"></td>
                         <td><%= medicine.name %></td>
@@ -38,13 +41,18 @@
                         <td><%= medicine.description %></td>
                         <td><%= medicine.medUse %></td>
                         <td><%= medicine.price %></td>
+                        <td><%= medicine.quantity > 0 ? 'In Stock' : 'Out of Stock' %></td>
                         <td>
-                            <form action="/patient/addToCart" method="POST">
-                                <input type="hidden" name="medicineName" value="<%= medicine.name %>">
-                                <input type="hidden" name="medicinePrice" value="<%= medicine.price %>">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit">Add to Cart</button>
-                            </form>                        
+                            <% if (medicine.quantity > 0) { %>
+                                <form action="/patient/addToCart" method="POST">
+                                    <input type="hidden" name="medicineName" value="<%= medicine.name %>">
+                                    <input type="hidden" name="medicinePrice" value="<%= medicine.price %>">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit">Add to Cart</button>
+                                </form>
+                            <% } else { %>
+                                <a href="/patient/medicines/alternative?medicineName=<%= medicine.name %>"><button>View Alternative</button></a>
+                            <% } %>
                         </td>
                     </tr>
                 <% } %>
