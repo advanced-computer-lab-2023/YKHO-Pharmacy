@@ -18,7 +18,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const server = http.createServer(app);
 const io = socketServer.initializeSocket(server);
-app.use(cors());
 
 require('dotenv').config();
 
@@ -100,7 +99,7 @@ app.post('/patient/addToCart', isAuthenticated, patientController.addToCart);
 app.get('/patient/ShoppingCart', isAuthenticated, patientController.getShoppingCart);
 app.post('/patient/removeFromCart', isAuthenticated, patientController.removeFromCart);
 app.post('/patient/editCartItemQuantity', isAuthenticated, patientController.editCartItemQuantity);
-app.get('/patient/checkout', isAuthenticated, patientController.getcheckoutPage);
+app.get('/patient/getcheckout', isAuthenticated, patientController.getcheckoutPage);
 app.post('/patient/addAddress', isAuthenticated, patientController.addAddress);
 app.post('/patient/checkout', isAuthenticated, patientController.checkout);
 app.post('/patient/emptyCart', isAuthenticated, patientController.emptyCart);

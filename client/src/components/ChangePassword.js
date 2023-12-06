@@ -10,8 +10,18 @@ const ChangePassword = () => {
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$%^&*])/;
+    return regex.test(password);
+  };
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
+
+    if (!validatePassword(newPassword)) {
+      setMessage({ type: 'error', text: 'New password does not meet the criteria.' });
+      return;
+    }
 
     try {
       const response = await axios.post(`http://localhost:8000/${userType}/change-password`, {
@@ -40,7 +50,7 @@ const ChangePassword = () => {
       <h1>Change Password</h1>
 
       {message && (
-        <div className={message.type}>
+        <div style={{ color: 'red' }}>
           {message.text}
         </div>
       )}

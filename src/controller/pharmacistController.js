@@ -8,7 +8,7 @@ const Order = require('../model/order');
 exports.getMedicines = async (req, res) => {
   try {
     const medicines = await Medicine.find();
-    res.render('pharmacist/medicines', { medicines });
+    res.json({ medicines });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -34,7 +34,7 @@ exports.createMedicine = async (req, res) => {
     let existingMedicine = await Medicine.findOne({ name });
 
     if (existingMedicine) {
-      return res.json({
+      return res.status(404).json({
         message: 'Medicine with the same name already exists',
         medicine: existingMedicine,
       });
@@ -172,7 +172,7 @@ exports.toggleMedicineStatus = async (req, res) => {
 
     await medicine.save();
 
-    res.redirect('/pharmacist/medicines');
+    res.json({ message: 'Status changed successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -247,7 +247,7 @@ exports.chat = (req, res) => {
 exports.getAllNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find();
-    res.render('pharmacist/notifications', { notifications });
+    res.json({ notifications });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -1,5 +1,6 @@
 // App.jsx
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
@@ -17,27 +18,44 @@ import GetPharmacist from './components/GetPharmacist';
 import GetPatient from './components/GetPatient';
 import ResetPassword from './components/ResetPassword';
 import ChangePassword from './components/ChangePassword';
+import MedicinesListPharm from './components/MedicinesListPharm';
+import EditMedicine from './components/EditMedicine';
+import CreateMedicine from './components/CreateMedicine';
+import PharmacistNotifications from './components/PharmacistNotifications';
+import MedicinesListPatient from './components/MedicinesListPatient';
+import ShoppingCart from './components/ShoppingCart';
+import Checkout from './components/Checkout';
+import OrderSuccessPage from './components/OrderSuccessPage';
+import FailedOrderPage from './components/FailedOrderPage';
 
 const App = () => {
   const [userType, setUserType] = useState(null);
 
+  useEffect(() => {
+    // Check for userType in localStorage on component mount
+    const storedUserType = localStorage.getItem('userType');
+    if (storedUserType) {
+      setUserType(storedUserType);
+    }
+  }, []);
+
   const handleLogin = (userType) => {
     setUserType(userType);
+    // Store userType in localStorage
+    localStorage.setItem('userType', userType);
   };
 
   const handleLogout = () => {
     setUserType(null);
+    // Remove userType from localStorage on logout
+    localStorage.removeItem('userType');
   };
 
   return (
-    <Router>
-      <div className="App">
-        <main>
+    <div className="App">
+        <Router>
           <Routes>
-            <Route
-              path="/"
-              element={userType ? <Navigate to={`/${userType}/home`} /> : <LoginPage onLogin={handleLogin} />}
-            />
+            <Route path="/" element={userType ? <Navigate to={`/${userType}/home`} /> : <LoginPage onLogin={handleLogin} />} />
              <Route path="/register" element={<RegisterPage />} />
              <Route path="/register/patient" element={<PatientRegistration />} />
              <Route path="/register/pharmacist" element={<PharmacistRegistration />} />
@@ -49,11 +67,20 @@ const App = () => {
              <Route path="getPatient" element={<GetPatient />} />
             </Route>
 
-            <Route path="/patient/home" element={userType === 'patient' ? <PatientHomePage onLogout={handleLogout} /> : <Navigate to="/" />} />
-            <Route
-              path="/pharmacist/home"
-              element={userType === 'pharmacist' ? <PharmacistHomePage onLogout={handleLogout} /> : <Navigate to="/" />}
-            />
+             <Route path="patient/success" element={<OrderSuccessPage />} />
+             <Route path="patient/failure" element={<FailedOrderPage />} />
+            <Route path="/patient/*" element={userType === 'patient' ? <PatientHomePage onLogout={handleLogout} /> : <Navigate to="/" />}>
+             <Route path="medicines" element={<MedicinesListPatient />} />
+             <Route path="shoppingCart" element={<ShoppingCart />} />
+             <Route path="checkout" element={<Checkout />} />
+            </Route>
+
+            <Route path="/pharmacist/*" element={userType === 'pharmacist' ? <PharmacistHomePage onLogout={handleLogout} /> : <Navigate to="/" />}>
+            <Route path="medicines" element={<MedicinesListPharm />} />
+            <Route path="notifications" element={<PharmacistNotifications />} />
+            <Route path="createMedicines" element={<CreateMedicine />} />
+            <Route path="editMedicine/:name/:dosage/:description/:medUse/:price" element={<EditMedicine />} />
+            </Route>
 
             {/* Route for Request Password Reset */}
             <Route path="/request-reset" element={<RequestPasswordResetPage />} />
@@ -62,9 +89,8 @@ const App = () => {
             <Route path="/resetPassword/:userType" element={<ResetPassword />} />
             <Route path="/changePassword/:userType" element={<ChangePassword />} />
           </Routes>
-        </main>
+        </Router>
       </div>
-    </Router>
   );
 };
 

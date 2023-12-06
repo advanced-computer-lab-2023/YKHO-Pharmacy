@@ -10,12 +10,15 @@ const Pharmacist = require('../model/pharmacist');
 
 exports.getMedicines = async (req, res) => {
   try {
-    const medicines = await Medicine.find();
-    res.render('patient/medicines', { medicines });
+    // Find medicines with a quantity greater than 0
+    const medicines = await Medicine.find({ quantity: { $gt: 0 } });
+
+    res.json({ medicines });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.searchMedicines = async (req, res) => {
   try {
@@ -137,7 +140,7 @@ exports.getShoppingCart = async (req, res) => {
 
     const shoppingCart = patient.shoppingCart;
 
-    res.render('patient/shoppingCart', { shoppingCart });
+    res.json({ shoppingCart });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -153,7 +156,7 @@ exports.getorders = async (req, res) => {
       return res.status(404).json({ message: 'You have No Orders' });
     }
 
-    res.render('patient/orders', { orders });
+    res.json({ orders });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -242,7 +245,7 @@ exports.getcheckoutPage = async (req, res) => {
     const deliveryAdd = patient.deliveryAdd;
     const shoppingCart = patient.shoppingCart;
 
-    res.render('patient/checkout', { deliveryAdd, shoppingCart });
+    res.json({ deliveryAdd, shoppingCart });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -263,13 +266,9 @@ exports.addAddress = async (req, res) => {
     if (!addressExists) {
       patient.deliveryAdd.push({ address: newAddress });
       await patient.save();
-
-      // Return the updated list of addresses
-      res.redirect('/patient/checkout');
-    } else {
-      // Address already exists, return the current list of addresses
-      res.status(200).json({ message: 'Address already exists.' });
     }
+      // Address already exists, return the current list of addresses
+      res.status(200).json({ message: 'Address already exists.', deliveryAdd: patient.deliveryAdd });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -317,12 +316,12 @@ exports.checkout = async (req, res) => {
             quantity: item.quantity,
           }
         }),
-        success_url: `http://localhost:${process.env.PORT}/patient/success`,
-        cancel_url: `http://localhost:${process.env.PORT}/patient/failure`,
+        success_url: `http://localhost:3000/patient/success`,
+        cancel_url: `http://localhost:3000/patient/failure`,
       });
 
       // Redirect to the Stripe Checkout page
-      return res.redirect(session.url);
+      return res.json({ sessionId: session.id, url: session.url });
     }
 
     // Create a new order in the database
@@ -457,7 +456,7 @@ exports.failedOrder = async (req, res) => {
     { new: true } // Return the updated document
   );
   
-  res.status(200).json({ message: 'Payment failed', orderId: order._id });
+  res.status(200);
 };
 
 exports.cancelOrder = async (req, res) => {

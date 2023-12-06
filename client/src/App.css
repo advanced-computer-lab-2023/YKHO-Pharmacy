@@ -166,3 +166,60 @@ a:hover {
 .action-cell {
   white-space: nowrap;
 }
+
+
+
+.checkout-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-form {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.medicine-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+.medicine-table th, .medicine-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.medicine-table th {
+  background-color: #4caf50;
+  color: white;
+}
+
+.total-text {
+  font-weight: bold;
+}
+
+.error-text {
+  color: red;
+}
+
+.checkout-button, .add-address-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.checkout-button:hover, .add-address-button:hover {
+  background-color: #45a049;
+}
