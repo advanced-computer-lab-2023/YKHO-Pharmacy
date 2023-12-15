@@ -17,6 +17,7 @@ const AdminHomePage = ({ onLogout }) => {
           <Link to="/admin/medicines" className="home-button">Medicines</Link>
           <Link to="/admin/getPharmacist" className="home-button">Manage Pharmacists</Link>
           <Link to="/admin/getPatient" className="home-button">Manage Patients</Link>
+          <Link to="/admin/totalSalesByMonth" className="home-button">Monthly Sales Report</Link>
       </div>
       <div>
         <Outlet />

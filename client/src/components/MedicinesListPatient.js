@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const MedicinesListPatient = () => {
   const [medicines, setMedicines] = useState([]);
@@ -7,6 +8,7 @@ const MedicinesListPatient = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTerm, setFilterTerm] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,17 +51,21 @@ const MedicinesListPatient = () => {
         withCredentials: true,
       });
 
-       // Set confirmation message
-       setConfirmationMessage('Medicine added to the shopping cart');
+      // Set confirmation message
+      setConfirmationMessage('Medicine added to the shopping cart');
 
-       // Clear confirmation message after a few seconds
-       setTimeout(() => {
-         setConfirmationMessage('');
-       }, 3000);
+      // Clear confirmation message after a few seconds
+      setTimeout(() => {
+        setConfirmationMessage('');
+      }, 3000);
     } catch (error) {
       console.error('Error adding medicine to the shopping cart:', error.message);
       // Handle error if needed
     }
+  };
+
+  const onHandleGetAlternatives = (medicineName) => {
+    navigate(`/patient/alternative/${medicineName}`);
   };
 
   if (loading) {
@@ -75,7 +81,6 @@ const MedicinesListPatient = () => {
           {confirmationMessage}
         </div>
       )}
-      <br></br>
 
       <form action="/patient/searchMedicines" method="GET">
         <input
@@ -106,6 +111,7 @@ const MedicinesListPatient = () => {
             <th>Description</th>
             <th>Medicinal Use</th>
             <th>Price</th>
+            <th>Stock Status</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -124,21 +130,25 @@ const MedicinesListPatient = () => {
               <td>{medicine.description}</td>
               <td>{medicine.medUse}</td>
               <td>{medicine.price}</td>
+              <td>{medicine.quantity > 0 ? ('In Stock') : ('Out of Stock')}</td>
               <td className="action-cell">
-              <button type="button" onClick={() => handleAddToCart(medicine)} className='accept-button'>
-                  Add to Cart
-                </button>
+                {medicine.quantity > 0 ? (
+                  <button type="button" onClick={() => handleAddToCart(medicine)} className='accept-button'>
+                    Add to Cart
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onHandleGetAlternatives(medicine.name)}
+                    className='reject-button'
+                  >
+                    View Alternative
+                  </button>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      {confirmationMessage && (
-        <div className="confirmation-message" style={{ color: 'green' }}>
-          {confirmationMessage}
-        </div>
-      )}
     </div>
   );
 };

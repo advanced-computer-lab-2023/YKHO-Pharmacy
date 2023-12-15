@@ -11,8 +11,7 @@ const moment = require('moment');
 
 exports.getMedicines = async (req, res) => {
   try {
-    // Find medicines with a quantity greater than 0
-    const medicines = await Medicine.find({ quantity: { $gt: 0 } });
+    const medicines = await Medicine.find();
 
     res.json({ medicines });
   } catch (err) {
@@ -597,9 +596,10 @@ exports.getAlternativeMedicines = async (req, res) => {
     const alternatives = await Medicine.find({
       medUse: medUse,
       name: { $ne: medicineName },
+      quantity: { $gt: 0 },
     });
 
-    res.render('patient/alternativeMedicine', { medicineName, alternatives });
+    res.json({ medicineName, alternatives });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -653,33 +653,3 @@ exports.handleFileUpload = async (req, res) => {
 exports.presMed = (req, res) => {
   res.render('patient/presMed');
 };
-
-// const PayByCredit = async (req, res) => {
-  
-//   const appoitmentid = req.params.id;
-//   const appoitment = await appointmentModel.findone({ _id: appoitmentid }) - populate("doctorID");
-  
-//   try {
-//     const session = await stripe.checkout.sessions.create({
-//       payment_method_types: ['card'], 
-//       mode: 'payment', 
-//       line_items: [{
-//         price_data: {
-//           currency: 'usd',
-//           product_data: {
-//             name: "Appointment With Dr." + appoitment.doctorID.name,
-//           },
-//           unit_amount: appoitment.price * 100,
-//         },
-//         quantity: 1,
-//       }],
-//       success_url: `http://localhost:${process.env.PORT}/sucess`,
-//       cancel_url: `https://localhost:${process.env.PORT}/fail`,
-//   })
-//   res.redirect(session.url);
-
-//   }catch(e){
-//     console.error(e);
-//     res.status(500).send('Internal Server Error');
-//   }
-// }

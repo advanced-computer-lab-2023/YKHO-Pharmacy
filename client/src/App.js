@@ -30,6 +30,8 @@ import FailedOrderPage from './components/FailedOrderPage';
 import OrdersPage from './components/OrdersPage';
 import AllSoldMedicinesReport from './components/AllSoldMedicinesReport';
 import TotalSalesByMonth from './components/TotalSalesByMonth';
+import TotalSalesByMonthAdmin from './components/TotalSalesByMonthAdmin';
+import AlternativeMedicines from './components/AlternativeMedicines';
 
 const App = () => {
   const [userType, setUserType] = useState(null);
@@ -68,13 +70,15 @@ const App = () => {
              <Route path="medicines" element={<MedicinesList />} />
              <Route path="getPharmacist" element={<GetPharmacist />} />
              <Route path="getPatient" element={<GetPatient />} />
+             <Route path="totalSalesByMonth" element={<TotalSalesByMonthAdmin />} />
             </Route>
 
              <Route path="patient/success" element={<OrderSuccessPage />} />
              <Route path="patient/failure" element={<FailedOrderPage />} />
             <Route path="/patient/*" element={userType === 'patient' ? <PatientHomePage onLogout={handleLogout} /> : <Navigate to="/" />}>
              <Route path="medicines" element={<MedicinesListPatient />} />
-            <Route path="orders" element={<OrdersPage />} />
+             <Route path="orders" element={<OrdersPage />} />
+             <Route path="alternative/:medicineName" element={<AlternativeMedicines />} />
              <Route path="shoppingCart" element={<ShoppingCart />} />
              <Route path="checkout" element={<Checkout />} />
             </Route>

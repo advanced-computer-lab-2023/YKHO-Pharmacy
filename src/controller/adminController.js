@@ -314,7 +314,7 @@ exports.getOrdersByMonth = async (req, res) => {
       }
     }
 
-    res.render('admin/totalSales', { totalSales });
+    res.json({ totalSales });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
