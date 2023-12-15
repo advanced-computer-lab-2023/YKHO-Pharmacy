@@ -1,6 +1,7 @@
 const Patient = require('../model/patient');
 const Pharmacist = require('../model/pharmacist');
 const RegRequest = require('../model/regRequest');
+const bcrypt = require("bcrypt");
 
 exports.createPatient = async (req, res) => {
   try {
@@ -12,7 +13,9 @@ exports.createPatient = async (req, res) => {
       dateOfBirth,
       gender,
       mobileNumber,
-      emergencyContact,
+      emergencyName,
+      emergencyMobile,
+      emergencyRelation,
     } = req.body;
 
     const existingPatient = await Patient.findOne({
@@ -23,15 +26,26 @@ exports.createPatient = async (req, res) => {
       return res.status(400).json({ error: 'Patient with the same username or email already exists' });
     }
 
+    const emergency = {
+      name: emergencyName,
+      mobile: emergencyMobile,
+      relation: emergencyRelation,
+    };
+
+    console.log(req.body);
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const newPatient = new Patient({
       username,
       name,
       email,
-      password,
-      dateOfBirth,
+      password: hashedPassword,
+      DOB: dateOfBirth,
       gender,
       mobileNumber,
-      emergencyContact,
+      emergency,
     });
 
     await newPatient.save();
@@ -51,7 +65,7 @@ exports.createRequest = async (req, res) => {
       name,
       email,
       password,
-      dateOfBirth,
+      DOB,
       hourlyRate,
       affiliation,
       educationalBackground,
@@ -77,7 +91,7 @@ exports.createRequest = async (req, res) => {
       name,
       email,
       password,
-      dateOfBirth,
+      DOB,
       hourlyRate,
       affiliation,
       educationalBackground,

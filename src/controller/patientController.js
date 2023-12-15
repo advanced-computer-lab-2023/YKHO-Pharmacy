@@ -8,6 +8,7 @@ const sendOutOfStockEmail = require('../sendOutOfStockEmail');
 const Notification = require('../model/notification');
 const Pharmacist = require('../model/pharmacist');
 const moment = require('moment');
+const bcrypt = require("bcrypt");
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -57,11 +58,18 @@ exports.changePassword = async (req, res) => {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
-    if (oldPassword !== patient.password) {
+    let found = false;
+    
+    found = await bcrypt.compare(oldPassword, patient.password);
+
+    if (!found) {
       return res.status(401).json({ message: 'Incorrect old password' });
     }
 
-    patient.password = newPassword;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    patient.password = hashedPassword;
     await patient.save();
 
     res.json({ message: 'Password changed successfully' });
@@ -81,7 +89,10 @@ exports.resetPassword = async (req, res) => {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
-    patient.password = newPassword;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    patient.password = hashedPassword;
     await patient.save();
 
     res.json({ message: 'Password changed successfully' });
@@ -316,8 +327,8 @@ exports.checkout = async (req, res) => {
             quantity: item.quantity,
           }
         }),
-        success_url: `http://localhost:3000/patient/success`,
-        cancel_url: `http://localhost:3000/patient/failure`,
+        success_url: `http://localhost:3001/patient/success`,
+        cancel_url: `http://localhost:3001/patient/failure`,
       });
 
       // Redirect to the Stripe Checkout page

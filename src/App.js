@@ -18,6 +18,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const server = http.createServer(app);
 const io = socketServer.initializeSocket(server);
+const bcrypt = require("bcrypt");
 
 require('dotenv').config();
 
@@ -29,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 mongoose.connect(uri, {
-  dbName: 'pharmacyDB',
+  dbName: 'clinic',
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -177,6 +178,8 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
   try {
+    let found = false;
+
     const { username, password } = req.body;
 
     const admin = await Administrator.findOne({ username });
@@ -188,9 +191,13 @@ app.post('/login', async (req, res) => {
 
     const patient = await Patient.findOne({ username });
 
-    if (patient && patient.password === password) {
-      req.session.user = patient;
-      return res.json({ userType: 'patient' });
+    if (patient) {
+      found = await bcrypt.compare(password, patient.password);
+
+      if(found) {
+        req.session.user = patient;
+        return res.json({ userType: 'patient' });
+      }
     }
 
     const pharmacist = await Pharmacist.findOne({ username });

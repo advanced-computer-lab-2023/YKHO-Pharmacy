@@ -11,11 +11,9 @@ const RegisterPage = ({ onRegister }) => {
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [gender, setGender] = useState('Male'); // Default to Male
   const [mobileNumber, setMobileNumber] = useState('');
-  const [emergencyContact, setEmergencyContact] = useState({
-    fullName: '',
-    mobileNumber: '',
-    relation: '',
-  });
+  const [emergencyName, setEmergencyName] = useState('');
+  const [emergencyMobile, setEmergencyMobile] = useState('');
+  const [emergencyRelation, setEmergencyRelation] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [registrationError, setRegistrationError] = useState('');
   const navigate = useNavigate();
@@ -34,7 +32,7 @@ const RegisterPage = ({ onRegister }) => {
   
       // Implement your registration logic here
       try {
-      const response = await axios.post('http://localhost:8000/guest/createPatient', {withCredentials: true}, {
+      const response = await axios.post('http://localhost:8000/guest/createPatient', {
         username,
         password,
         name,
@@ -42,13 +40,11 @@ const RegisterPage = ({ onRegister }) => {
         dateOfBirth,
         gender,
         mobileNumber,
-        emergencyContact,
+        emergencyName,
+        emergencyMobile,
+        emergencyRelation,
         // Add other registration fields as needed
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      }, {withCredentials: true});
 
       if (response.status === 201) {
         // Registration successful
@@ -76,7 +72,7 @@ const RegisterPage = ({ onRegister }) => {
 
   return (
     <div>
-      <h2 class="center-aligned">Patient Registration</h2>
+      <h2 className="center-aligned">Patient Registration</h2>
       <form onSubmit={handleRegister}>
           <label htmlFor="username">Username:</label>
           <input
@@ -125,8 +121,8 @@ const RegisterPage = ({ onRegister }) => {
             value={gender}
             onChange={(e) => setGender(e.target.value)}
           >
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
             <br></br>
           <label htmlFor="mobileNumber">Mobile Number:</label>
@@ -138,28 +134,28 @@ const RegisterPage = ({ onRegister }) => {
             required
           />
         <h2>Emergency Contact</h2>
-          <label htmlFor="emergencyContact[fullName]">Full Name:</label>
+          <label htmlFor="emergencyName">Full Name:</label>
           <input
             type="text"
-            id="emergencyContact[fullName]"
-            value={emergencyContact.fullName}
-            onChange={(e) => setEmergencyContact({ ...emergencyContact, fullName: e.target.value })}
+            id="emergencyName"
+            value={emergencyName}
+            onChange={(e) => setEmergencyName(e.target.value)}
             required
           />
-          <label htmlFor="emergencyContact[mobileNumber]">Mobile Number:</label>
+          <label htmlFor="emergencyMobile">Mobile Number:</label>
           <input
             type="number"
-            id="emergencyContact[mobileNumber]"
-            value={emergencyContact.mobileNumber}
-            onChange={(e) => setEmergencyContact({ ...emergencyContact, mobileNumber: e.target.value })}
+            id="emergencyMobile"
+            value={emergencyMobile}
+            onChange={(e) => setEmergencyMobile(e.target.value)}
             required
           />
-          <label htmlFor="emergencyContact[relation]">Relation to the Patient:</label>
+          <label htmlFor="emergencyRelation">Relation to the Patient:</label>
           <input
             type="text"
-            id="emergencyContact[relation]"
-            value={emergencyContact.relation}
-            onChange={(e) => setEmergencyContact({ ...emergencyContact, relation: e.target.value })}
+            id="emergencyRelation"
+            value={emergencyRelation}
+            onChange={(e) => setEmergencyRelation(e.target.value)}
             required
           />
         {registrationError && <p style={{ color: 'red' }}>{registrationError}</p>}
