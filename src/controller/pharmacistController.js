@@ -4,6 +4,7 @@ const path = require('path');
 const io = require('socket.io-client');
 const Notification = require('../model/notification');
 const Order = require('../model/order');
+const bcrypt = require("bcrypt");
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -123,14 +124,21 @@ exports.changePassword = async (req, res) => {
     const pharmacist = await Pharmacist.findOne({ username });
 
     if (!pharmacist) {
-      return res.status(404).json({ message: 'Patient not found' });
+      return res.status(404).json({ message: 'Pharmacist not found' });
     }
 
-    if (oldPassword !== pharmacist.password) {
+    let found = false;
+    
+    found = await bcrypt.compare(oldPassword, pharmacist.password);
+
+    if (!found) {
       return res.status(401).json({ message: 'Incorrect old password' });
     }
 
-    pharmacist.password = newPassword;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    pharmacist.password = hashedPassword;
     await pharmacist.save();
 
     res.json({ message: 'Password changed successfully' });
@@ -147,10 +155,13 @@ exports.resetPassword = async (req, res) => {
     const pharmacist = await Pharmacist.findOne({ username });
 
     if (!pharmacist) {
-      return res.status(404).json({ message: 'pharmacist not found' });
+      return res.status(404).json({ message: 'Pharmacist not found' });
     }
 
-    pharmacist.password = newPassword;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    pharmacist.password = hashedPassword;
     await pharmacist.save();
 
     res.json({ message: 'Password changed successfully' });

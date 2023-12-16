@@ -4,6 +4,7 @@ const Pharmacist = require('../model/pharmacist');
 const Patient = require('../model/patient');
 const RegRequest = require('../model/regRequest');
 const Order = require('../model/order');
+const bcrypt = require("bcrypt");
 
 exports.getMedicines = async (req, res) => {
   try {
@@ -36,7 +37,10 @@ exports.addAdministrator = async (req, res) => {
       return res.status(400).json({ message: 'Username already exists' });
     }
 
-    const newAdministrator = new Administrator({ username, password, email });
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newAdministrator = new Administrator({ username, hashedPassword, email });
     await newAdministrator.save();
 
     res.status(201).json({ message: 'Administrator added successfully' });
@@ -158,11 +162,18 @@ exports.changePassword = async (req, res) => {
       return res.status(404).json({ message: 'Administrator not found' });
     }
 
-    if (oldPassword !== admin.password) {
+    let found = false;
+    
+    found = await bcrypt.compare(oldPassword, admin.password);
+
+    if (!found) {
       return res.status(401).json({ message: 'Incorrect old password' });
     }
 
-    admin.password = newPassword;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    admin.password = hashedPassword;
     await admin.save();
 
     res.json({ message: 'Password changed successfully' });
@@ -182,7 +193,10 @@ exports.resetPassword = async (req, res) => {
       return res.status(404).json({ message: 'admin not found' });
     }
 
-    admin.password = newPassword;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    admin.password = hashedPassword;
     await admin.save();
 
     res.json({ message: 'Password changed successfully' });
@@ -237,12 +251,14 @@ exports.acceptRequest = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(request.password, salt);
+
     const newPharmacist = new Pharmacist({
       username: request.username,
       name: request.name,
       email: request.email,
-      password: request.password, 
+      password: hashedPassword, 
       dateOfBirth: request.dateOfBirth,
       hourlyRate: request.hourlyRate,
       affiliation: request.affiliation,

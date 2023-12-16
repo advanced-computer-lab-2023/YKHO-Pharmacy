@@ -184,9 +184,13 @@ app.post('/login', async (req, res) => {
 
     const admin = await Administrator.findOne({ username });
 
-    if (admin && admin.password === password) {
-      req.session.user = admin;
-      return res.json({ userType: 'admin' });
+    if (admin) {
+      found = await bcrypt.compare(password, admin.password);
+
+      if(found) {
+        req.session.user = admin;
+        return res.json({ userType: 'admin' });
+      }
     }
 
     const patient = await Patient.findOne({ username });
@@ -202,9 +206,13 @@ app.post('/login', async (req, res) => {
 
     const pharmacist = await Pharmacist.findOne({ username });
 
-    if (pharmacist && pharmacist.password === password) {
-      req.session.user = pharmacist;
-      return res.json({ userType: 'pharmacist' });
+    if (pharmacist) {
+      found = await bcrypt.compare(password, pharmacist.password);
+
+      if(found) {
+        req.session.user = pharmacist;
+        return res.json({ userType: 'pharmacist' });
+      }
     }
 
      res.status(401).json({ error: 'Invalid username or password' });
