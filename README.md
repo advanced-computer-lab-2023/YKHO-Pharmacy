@@ -90,6 +90,21 @@ Here are some screenshots showcasing the key features of the YKHO-Pharmacy proje
    ![Pharmacist](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/pharmHome.png?raw=true)
    ![Admin](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/homeadmin.png?raw=true)
 
+5. **Medicine Page:**
+   ![Medicine](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/medlist.png?raw=true)  
+
+6. **Shopping Cart Page:**
+   ![Shopping Cart](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/cart.png?raw=true)
+
+7. **Checkout Page:**
+   ![Checkout](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/check.png?raw=true)
+
+8. **Order History Page:**
+   ![Order History](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/order.png?raw=true)
+
+9. **Chat Page:**
+   ![Chat](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/chat.png?raw=true)     
+
 </details>
 
 
