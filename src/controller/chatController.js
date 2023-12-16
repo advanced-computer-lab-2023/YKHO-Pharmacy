@@ -1,4 +1,4 @@
-const chatModel = require("../model/chat");
+const chatModel = require("../model/chatPP");
 
 const chats = async (req,res) => {
     let chats = [];

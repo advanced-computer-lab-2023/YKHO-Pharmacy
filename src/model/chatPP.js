@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {pharmacist} = require("./pharmacist")
+const pharmacist = require("./pharmacist")
 const patient = require("./patient")
 
 const messageSchema = {
