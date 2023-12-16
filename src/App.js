@@ -290,7 +290,7 @@ app.post('/request-reset', async (req, res) => {
     from: 'yoyo_ah360@hotmail.com',
     to: email,
     subject: 'Password Reset OTP',
-    text: `Your OTP for password reset: ${otp}`,
+    text: Your OTP for password reset: ${otp},
   };
 
   transport.sendMail(mailOptions, (error) => {
@@ -332,7 +332,7 @@ app.post('/verify-otp', (req, res) => {
 const {Server} = require("socket.io");
 
 let server2 = app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(Server is running on port ${port});
 });
 
 const io = new Server(server2,{
