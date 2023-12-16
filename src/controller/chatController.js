@@ -3,7 +3,9 @@ const chatModel = require("../model/chatPP");
 const chats = async (req,res) => {
     let chats = [];
     if(req.session.userType == "patient"){
-        chats = await chatModel.find({patientID: req.session._id}).populate("pharmacistID").sort({ "updatedAt": -1 });;
+        chats = await chatModel.find({patientID: req.session._id}).populate("pharmacistID").sort({ "updatedAt": -1 });
+        console.log('chats: ');
+        console.log(chats);
         chats = chats.map(({room,pharmacistID,patientID,messages}) => ({
             room,
             name: pharmacistID.name,

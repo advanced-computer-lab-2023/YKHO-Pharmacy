@@ -106,9 +106,12 @@ const ShoppingCart = () => {
           ))}
         </tbody>
       </table>
-      <Link to="/patient/checkout">
-        <button>Continue to Checkout</button>
-      </Link>
+      {shoppingCart.length > 0 && (
+        <Link to="/patient/checkout">
+          <button>Continue to Checkout</button>
+        </Link>
+      )}
+
     </div>
   );
   

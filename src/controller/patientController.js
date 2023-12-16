@@ -645,13 +645,17 @@ exports.handleFileUpload = async (req, res) => {
       const medicineNames = lines.map(line => line.trim());
 
       const searchResults = await Promise.all(
-        medicineNames.map(async medicineName => {
+        medicineNames.map(async (medicineName) => {
           const medicine = await Medicine.findOne({ name: medicineName });
-          return { medicineName, result: medicine };
+          const price = medicine ? medicine.price : 0;
+      
+          return { medicineName, result: medicine, price };
         })
       );
+      
 
-      res.render('patient/resultsMed', { searchResults });
+      // res.render('patient/resultsMed', { searchResults });
+      res.json({ searchResults });
     } else {
       res.status(400).json({ error: 'Outdated file. Date is not within a week before today.' });
     }
