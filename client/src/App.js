@@ -35,6 +35,7 @@ import AlternativeMedicines from './components/AlternativeMedicines';
 import FileUpload from './components/FileUpload';
 import ResultsMed from './components/ResultsMed';
 import ChatPatient from './components/ChatPatient';
+import ChatPharm from './components/ChatPharm';
 
 const App = () => {
   const [userType, setUserType] = useState(null);
@@ -78,6 +79,7 @@ const App = () => {
 
              <Route path="patient/success" element={<OrderSuccessPage />} />
              <Route path="patient/failure" element={<FailedOrderPage />} />
+             <Route path="patient/chat" element={<ChatPatient />} />
             <Route path="/patient/*" element={userType === 'patient' ? <PatientHomePage onLogout={handleLogout} /> : <Navigate to="/" />}>
              <Route path="medicines" element={<MedicinesListPatient />} />
              <Route path="orders" element={<OrdersPage />} />
@@ -86,9 +88,9 @@ const App = () => {
              <Route path="checkout" element={<Checkout />} />
              <Route path="fileupload" element={<FileUpload />} />
              <Route path="resultsMed" element={<ResultsMed />} />
-             <Route path="chat" element={<ChatPatient />} />
             </Route>
 
+             <Route path="pharmacist/chat" element={<ChatPharm />} />
             <Route path="/pharmacist/*" element={userType === 'pharmacist' ? <PharmacistHomePage onLogout={handleLogout} /> : <Navigate to="/" />}>
             <Route path="medicines" element={<MedicinesListPharm />} />
             <Route path="notifications" element={<PharmacistNotifications />} />

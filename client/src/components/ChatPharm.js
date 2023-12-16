@@ -23,13 +23,13 @@ import Dialog from '@mui/material/Dialog';
 import io from 'socket.io-client';
 const socket = io.connect("http://localhost:8000");
 
-function ChatPatient() {
+function ChatPharm() {
     const [open, setOpen] = useState(false);
     const [result, setResult] = useState(false);
     const [chats, setChats] = useState([]);
     const [contacts, setContacts] = useState([]);
     const [index, setIndex] = useState(-1);
-    const [isPatient, setIsPatient] = useState(true);
+    const [isPatient, setIsPatient] = useState(false);
     const [text, setText] = useState("");
     const chatsRef = useRef(chats);
     const indexRef = useRef(index);
@@ -412,4 +412,4 @@ function ChatPatient() {
     );
 }
 
-export default ChatPatient;
+export default ChatPharm;
