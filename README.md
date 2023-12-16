@@ -555,13 +555,15 @@ npm install
 
 1. Create a .env file in the root directory.
 2. Define the following environment variables in the .env file:
-MONGODB_URI="mongodb+srv://yoyo:13EBDAEE47@acldb.as0dbmg.mongodb.net/?retryWrites=true&w=majority"
+MONGODB_URI="mongodb+srv://fuji:Aaa12345@clinic.qyxz3je.mongodb.net/clinic?retryWrites=true&w=majority"
 
 ### Run The Application
 
 ```bash
 cd client
 npm start
+cd src
+node app
 ```
 The application should now be running on http://localhost:8000.
 
