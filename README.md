@@ -71,10 +71,13 @@ function calculateTotal(item_price, Quantity) {
 
 Here are some screenshots showcasing the key features of the YKHO-Pharmacy project:
 
+<details>
+<summary><strong>Screenshots</strong></summary>
+
 1. **Login:**
    ![Login](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/242981dd8eb6a9b98eca518a8f0727cfff6e8bbf/login.png?raw=true)
 
-2. **Regitser:**
+2. **Register:**
    ![Register](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/register.png?raw=true)
 
 3. **Reset Password:**
@@ -86,6 +89,9 @@ Here are some screenshots showcasing the key features of the YKHO-Pharmacy proje
    ![Patient](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/home.png?raw=true)
    ![Pharmacist](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/pharmHome.png?raw=true)
    ![Admin](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/homeadmin.png?raw=true)
+
+</details>
+
 
 ## Tech/Framework used
 
