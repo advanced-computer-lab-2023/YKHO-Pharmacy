@@ -5,7 +5,7 @@ import axios from 'axios';
 const AlternativeMedicines = () => {
   const { medicineName } = useParams();
   const [alternatives, setAlternatives] = useState([]);
-  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [addedMedicines, setAddedMedicines] = useState([]);
 
   useEffect(() => {
     const handleGetAlternativeMedicines = async () => {
@@ -38,13 +38,9 @@ const handleAddToCart = async (medicine) => {
         withCredentials: true,
         });
 
-        // Set confirmation message
-        setConfirmationMessage('Medicine added to the shopping cart');
+        // Update the addedMedicines state
+        setAddedMedicines([...addedMedicines, medicine]);
 
-        // Clear confirmation message after a few seconds
-        setTimeout(() => {
-        setConfirmationMessage('');
-        }, 3000);
     } catch (error) {
         console.error('Error adding medicine to the shopping cart:', error.message);
         // Handle error if needed
@@ -55,41 +51,61 @@ const handleAddToCart = async (medicine) => {
     <div className="center-aligned">
       <h1 className="header-text">Alternative Medicines for {medicineName}</h1>
 
-      {confirmationMessage && (
-        <div className="confirmation-message" style={{ color: 'green' }}>
-          {confirmationMessage}
-        </div>
-      )}
-
       {alternatives.length > 0 ? (
         <table className="requests-table">
-          <thead>
-            <tr>
-              <th>Medicine Name</th>
-              <th>Dosage</th>
-              <th>Description</th>
-              <th>Medicinal Use</th>
-              <th>Price</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {alternatives.map((alternative, index) => (
-              <tr key={index}>
-                <td>{alternative.name}</td>
-                <td>{alternative.dosage}</td>
-                <td>{alternative.description}</td>
-                <td>{alternative.medUse}</td>
-                <td>{alternative.price}</td>
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Dosage</th>
+            <th>Description</th>
+            <th>Medicinal Use</th>
+            <th>Price</th>
+            <th>Stock Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {alternatives
+            .filter((medicine) => !medicine.archived) // Filter out archived medicines
+            .map((medicine) => (
+              <tr key={medicine._id}>
+                <td>
+                  <img
+                    src={medicine.image}
+                    alt="Medicine"
+                    style={{ width: '200px', height: '150px' }}
+                  />
+                </td>
+                <td>{medicine.name}</td>
+                <td>{medicine.dosage}</td>
+                <td>{medicine.description}</td>
+                <td>{medicine.medUse}</td>
+                <td>{medicine.price}</td>
+                <td>{medicine.quantity > 0 ? 'In Stock' : 'Out of Stock'}</td>
                 <td className="action-cell">
-                  <button type="button" onClick={() => handleAddToCart(alternative)} className='accept-button'>
-                    Add to Cart
-                  </button>
+                  {medicine.needPres ? (
+                    <span>Prescription Needed</span>
+                  ) : (
+                    <React.Fragment>
+                      {addedMedicines.includes(medicine) ? (
+                        <span>Added Successfully</span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleAddToCart(medicine)}
+                          className="accept-button"
+                        >
+                          Add to Cart
+                        </button>
+                      )}
+                      </React.Fragment>
+                  )}
                 </td>
               </tr>
             ))}
-          </tbody>
-        </table>
+        </tbody>
+      </table>
       ) : (
         <p>No alternative medicines found for {medicineName}.</p>
       )}

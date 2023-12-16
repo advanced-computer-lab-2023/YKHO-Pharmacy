@@ -579,15 +579,6 @@ exports.chat = (req, res) => {
   });
 };
 
-// exports.presMed = async (req, res) => {
-//   try {
-//     const medicines = await Medicine.find({ needPres: true });
-//     res.render('patient/presMed', { medicines });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
-
 exports.getAlternativeMedicines = async (req, res) => {
   try {
     const { medicineName } = req.query;
@@ -653,8 +644,6 @@ exports.handleFileUpload = async (req, res) => {
         })
       );
       
-
-      // res.render('patient/resultsMed', { searchResults });
       res.json({ searchResults });
     } else {
       res.status(400).json({ error: 'Outdated file. Date is not within a week before today.' });

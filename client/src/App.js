@@ -64,6 +64,7 @@ const App = () => {
     <div className="App">
         <Router>
           <Routes>
+             <Route path="/Login" element={<LoginPage onLogin={handleLogin} onLogout={handleLogout} />} />
             <Route path="/" element={userType ? <Navigate to={`/${userType}/home`} /> : <LoginPage onLogin={handleLogin} />} />
              <Route path="/register" element={<RegisterPage />} />
              <Route path="/register/patient" element={<PatientRegistration />} />

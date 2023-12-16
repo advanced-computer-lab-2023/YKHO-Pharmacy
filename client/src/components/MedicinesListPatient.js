@@ -7,7 +7,7 @@ const MedicinesListPatient = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTerm, setFilterTerm] = useState('');
-  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [addedMedicines, setAddedMedicines] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,18 +46,14 @@ const MedicinesListPatient = () => {
       await axios.post('http://localhost:8000/patient/addToCart', {
         medicineName: name,
         medicinePrice: price,
-        quantity: 1, // You may adjust the quantity as needed
+        quantity: 1,
       }, {
         withCredentials: true,
       });
 
-      // Set confirmation message
-      setConfirmationMessage('Medicine added to the shopping cart');
+      // Update the addedMedicines state
+      setAddedMedicines([...addedMedicines, medicine]);
 
-      // Clear confirmation message after a few seconds
-      setTimeout(() => {
-        setConfirmationMessage('');
-      }, 3000);
     } catch (error) {
       console.error('Error adding medicine to the shopping cart:', error.message);
       // Handle error if needed
@@ -75,12 +71,6 @@ const MedicinesListPatient = () => {
   return (
     <div className="center-aligned">
       <h1 className="header-text">Medicine List</h1>
-
-      {confirmationMessage && (
-        <div className="confirmation-message" style={{ color: 'green' }}>
-          {confirmationMessage}
-        </div>
-      )}
 
       <form action="/patient/searchMedicines" method="GET">
         <input
@@ -139,13 +129,19 @@ const MedicinesListPatient = () => {
                 ) : (
                   <React.Fragment>
                     {medicine.quantity > 0 ? (
-                      <button
-                        type="button"
-                        onClick={() => handleAddToCart(medicine)}
-                        className="accept-button"
-                      >
-                        Add to Cart
-                      </button>
+                      <React.Fragment>
+                        {addedMedicines.includes(medicine) ? (
+                          <span>Added Successfully</span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleAddToCart(medicine)}
+                            className="accept-button"
+                          >
+                            Add to Cart
+                          </button>
+                        )}
+                        </React.Fragment>
                     ) : (
                       <button
                         onClick={() => onHandleGetAlternatives(medicine.name)}

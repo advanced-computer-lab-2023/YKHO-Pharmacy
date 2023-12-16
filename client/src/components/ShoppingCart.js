@@ -108,6 +108,7 @@ const ShoppingCart = () => {
               ))}
             </tbody>
           </table>
+          <br></br>
           <Link to="/patient/checkout">
             <button>Continue to Checkout</button>
           </Link>
