@@ -72,29 +72,25 @@ function calculateTotal(item_price, Quantity) {
 Here are some screenshots showcasing the key features of the YKHO-Pharmacy project:
 
 <details>
-  <summary>Login</summary>
-  ![Login](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/242981dd8eb6a9b98eca518a8f0727cfff6e8bbf/login.png?raw=true)
-</details>
+<summary><strong>Screenshots</strong></summary>
 
-<details>
-  <summary>Register</summary>
-  ![Register](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/register.png?raw=true)
-</details>
+1. **Login:**
+   ![Login](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/242981dd8eb6a9b98eca518a8f0727cfff6e8bbf/login.png?raw=true)
 
-<details>
-  <summary>Reset Password</summary>
-  ![Request](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/resetPassword.png?raw=true)
-  ![OTP](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/otp.png?raw=true)
-  ![Reset](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/passwordChange.png?raw=true)
-</details>
+2. **Register:**
+   ![Register](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/register.png?raw=true)
 
-<details>
-  <summary>Home Page</summary>
-  ![Patient](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/home.png?raw=true)
-  ![Pharmacist](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/pharmHome.png?raw=true)
-  ![Admin](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/homeadmin.png?raw=true)
-</details>
+3. **Reset Password:**
+   ![Request](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/resetPassword.png?raw=true)
+   ![OTP](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/otp.png?raw=true)
+   ![Reset](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/passwordChange.png?raw=true)
 
+4. **Home Page:**
+   ![Patient](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/home.png?raw=true)
+   ![Pharmacist](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/pharmHome.png?raw=true)
+   ![Admin](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/homeadmin.png?raw=true)
+
+</details>
 
 
 ## Tech/Framework used
