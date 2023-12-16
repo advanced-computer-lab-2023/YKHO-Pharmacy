@@ -17,7 +17,6 @@ const socketServer = require('./socketServer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const server = http.createServer(app);
-const io = socketServer.initializeSocket(server);
 const bcrypt = require("bcrypt");
 
 require('dotenv').config();
@@ -184,13 +183,9 @@ app.post('/login', async (req, res) => {
 
     const admin = await Administrator.findOne({ username });
 
-    if (admin) {
-      found = await bcrypt.compare(password, admin.password);
-
-      if(found) {
-        req.session.user = admin;
-        return res.json({ userType: 'admin' });
-      }
+    if (admin && admin.password === password) {
+      req.session.user = admin;
+      return res.json({ userType: 'admin' });
     }
 
     const patient = await Patient.findOne({ username });
@@ -200,19 +195,19 @@ app.post('/login', async (req, res) => {
 
       if(found) {
         req.session.user = patient;
+        req.session.userType = "patient";
+        req.session._id = patient._id;
         return res.json({ userType: 'patient' });
       }
     }
 
     const pharmacist = await Pharmacist.findOne({ username });
 
-    if (pharmacist) {
-      found = await bcrypt.compare(password, pharmacist.password);
-
-      if(found) {
-        req.session.user = pharmacist;
-        return res.json({ userType: 'pharmacist' });
-      }
+    if (pharmacist && pharmacist.password === password) {
+      req.session.user = pharmacist;
+      req.session.userType = "pharmacist";
+      req.session._id = pharmacist._id;
+      return res.json({ userType: 'pharmacist' });
     }
 
      res.status(401).json({ error: 'Invalid username or password' });
@@ -322,6 +317,44 @@ app.post('/verify-otp', (req, res) => {
     return res.status(401).json({ message: 'Invalid OTP' });
   }
 });
+
+// socket.io
+const {Server} = require("socket.io");
+
+const io = new Server(server,{
+  cors:{
+    origin: "http://localhost:5173",
+    credentials:true
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('connected', socket.id);
+
+  socket.on("join_room", (data) => {
+    console.log("joined room "+ data)
+    socket.join(data);
+  })    
+ 
+  // chat
+  socket.on("send_message", (data) => {
+    socket.in(data.room).emit("receive_message", data);
+    save(data);
+  })
+
+  socket.on("disconnect", (data) => {
+    console.log("disconnected", socket.id)
+  })
+});
+
+// chat
+const {chats, send, read, start, save, contacts} = require("./controller/chatController.js");
+
+app.get("/chats", isAuthenticated, chats);
+app.post("/text", isAuthenticated, send);
+app.post("/read", isAuthenticated, read);
+app.post("/start", isAuthenticated, start);
+app.get("/contacts", isAuthenticated, contacts);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
