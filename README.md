@@ -74,11 +74,18 @@ Here are some screenshots showcasing the key features of the YKHO-Pharmacy proje
 1. **Login:**
    ![Login](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/242981dd8eb6a9b98eca518a8f0727cfff6e8bbf/login.png?raw=true)
 
-2. **Feature 2:**
-   ![Feature 2](screenshot_link_2)
+2. **Regitser:**
+   ![Register](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/register.png?raw=true)
 
-   ...
+3. **Reset Password:**
+   ![Request](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/resetPassword.png?raw=true)
+   ![OTP](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/otp.png?raw=true)
+   ![Reset](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/passwordChange.png?raw=true)
 
+4. **Home Page:**
+   ![Patient](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/home.png?raw=true)
+   ![Pharmacist](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/pharmHome.png?raw=true)
+   ![Admin](https://github.com/advanced-computer-lab-2023/YKHO-Pharmacy/blob/main/homeadmin.png?raw=true)
 
 ## Tech/Framework used
 
@@ -565,7 +572,7 @@ npm start
 cd src
 node app
 ```
-The application should now be running on http://localhost:8000.
+The application should now be running on http://localhost:3000.
 
 ## Contribute
 
