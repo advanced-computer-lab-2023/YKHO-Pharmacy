@@ -2,7 +2,7 @@ const Medicine = require('../model/medicine');
 const Pharmacist = require('../model/pharmacist');
 const path = require('path');
 const io = require('socket.io-client');
-const Notification = require('../model/notification');
+const Notification = require('../model/PharmNotification');
 const Order = require('../model/order');
 const bcrypt = require("bcrypt");
 

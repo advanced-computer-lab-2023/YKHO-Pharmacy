@@ -158,9 +158,13 @@ const RegisterPage = ({ onRegister }) => {
             onChange={(e) => setEmergencyRelation(e.target.value)}
             required
           />
-        {registrationError && <p style={{ color: 'red' }}>{registrationError}</p>}
-        <button type="submit">Register</button>
-        <br></br>
+          {registrationError && <p style={{ color: 'red' }}>{registrationError}</p>}
+          <button type="submit">Register</button>
+          <br></br>
+          <div>
+            <button onClick={() => navigate('/register')} className='reject-button'>Back</button>
+          </div>
+          <br></br>
       </form>
     </div>
   );

@@ -103,20 +103,22 @@ const MedicinesListPatient = () => {
       </form>
 
       <table className="requests-table">
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Dosage</th>
-            <th>Description</th>
-            <th>Medicinal Use</th>
-            <th>Price</th>
-            <th>Stock Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredMedicines.map((medicine) => (
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Dosage</th>
+          <th>Description</th>
+          <th>Medicinal Use</th>
+          <th>Price</th>
+          <th>Stock Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {filteredMedicines
+          .filter((medicine) => !medicine.archived) // Filter out archived medicines
+          .map((medicine) => (
             <tr key={medicine._id}>
               <td>
                 <img
@@ -130,20 +132,24 @@ const MedicinesListPatient = () => {
               <td>{medicine.description}</td>
               <td>{medicine.medUse}</td>
               <td>{medicine.price}</td>
-              <td>{medicine.quantity > 0 ? ('In Stock') : ('Out of Stock')}</td>
+              <td>{medicine.quantity > 0 ? 'In Stock' : 'Out of Stock'}</td>
               <td className="action-cell">
                 {medicine.needPres ? (
                   <span>Prescription Needed</span>
                 ) : (
                   <React.Fragment>
                     {medicine.quantity > 0 ? (
-                      <button type="button" onClick={() => handleAddToCart(medicine)} className='accept-button'>
+                      <button
+                        type="button"
+                        onClick={() => handleAddToCart(medicine)}
+                        className="accept-button"
+                      >
                         Add to Cart
                       </button>
                     ) : (
                       <button
                         onClick={() => onHandleGetAlternatives(medicine.name)}
-                        className='reject-button'
+                        className="reject-button"
                       >
                         View Alternative
                       </button>
@@ -151,11 +157,10 @@ const MedicinesListPatient = () => {
                   </React.Fragment>
                 )}
               </td>
-
             </tr>
           ))}
-        </tbody>
-      </table>
+      </tbody>
+    </table>
     </div>
   );
 };

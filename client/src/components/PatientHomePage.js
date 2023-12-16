@@ -62,6 +62,8 @@ const PatientHomePage = ({ onLogout }) => {
         <Outlet />
       </div>
       <br></br>
+      <br></br>
+      <br></br>
       <div>
         <LogoutButton onLogout={onLogout} />
       </div>

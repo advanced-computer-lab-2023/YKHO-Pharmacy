@@ -169,6 +169,10 @@ const PharmacistRegistration = () => {
         {registrationError && <p style={{ color: 'red' }}>{registrationError}</p>}
         <button type="submit">Submit Request</button>
         <br></br>
+        <div>
+          <button onClick={() => navigate('/register')} className='reject-button'>Back</button>
+        </div>
+        <br></br>
       </form>
     </div>
   );

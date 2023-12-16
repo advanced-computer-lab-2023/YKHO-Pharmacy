@@ -77,7 +77,7 @@ const GetPatient = () => {
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
         </label>
         <br />
-        <button type="submit">Get Patient</button>
+        <button type="submit">Search</button>
       </form>
       <p style={{ color: 'red' }}>{message}</p>
       {patientData && (
@@ -96,6 +96,8 @@ const GetPatient = () => {
           <button onClick={handleRemove} className='reject-button'>Remove Patient</button>
         </div>
       )}
+      <br></br>
+      <br></br>
       <br></br>
     </div>
   );

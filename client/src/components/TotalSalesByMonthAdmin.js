@@ -37,6 +37,9 @@ const TotalSalesByMonthAdmin = () => {
       {totalSales !== null && (
         <p>Total Sales: {totalSales}</p>
       )}
+      <br></br>
+      <br></br>
+      <br></br>
     </div>
   );
 };

@@ -75,6 +75,10 @@ const ChangePassword = () => {
         />
 
         <button type="submit">Change Password</button>
+        <br></br>
+        <div>
+          <button onClick={() => navigate(`/${userType}`)} className='reject-button'>Back</button>
+        </div>
       </form>
     </div>
   );

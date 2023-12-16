@@ -84,6 +84,9 @@ const AddAdministratorForm = () => {
         <button type="submit">Add Administrator</button>
       </form>
       <p id="message" className='center-aligned'>{message}</p>
+      <br></br>
+      <br></br>
+      <br></br>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -255,7 +256,7 @@ function ChatPatient() {
                                 color: 'primary.contrastText',
                             }}
                         >
-                            Chats
+                            <Link to="/patient" style={{ color: 'white' }}>Back</Link>
                         </ListSubheader>
                         {
                             chats.length > 0 &&

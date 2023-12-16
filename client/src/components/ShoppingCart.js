@@ -81,36 +81,41 @@ const ShoppingCart = () => {
         </div>
       )}
       
-      <table className="requests-table">
-        <thead>
-          <tr>
-            <th>Medicine Name</th>
-            <th>Quantity</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {shoppingCart.map((item) => (
-            <tr key={item.medicineName}>
-              <td>{item.medicineName}</td>
-              <td>
-                <form onSubmit={(e) => { e.preventDefault(); handleUpdateQuantity(item.medicineName, e.target.newQuantity.value); }}>
-                  <input type="number" name="newQuantity" defaultValue={item.quantity} />
-                  <button type="submit" className='accept-button'>Update Quantity</button>
-                </form>
-              </td>
-              <td className="action-cell">
-                <button onClick={() => handleRemoveFromCart(item.medicineName)} className='reject-button'>Remove from Cart</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {shoppingCart.length > 0 && (
-        <Link to="/patient/checkout">
-          <button>Continue to Checkout</button>
-        </Link>
+      {shoppingCart.length > 0 ? (
+        <React.Fragment>
+          <table className="requests-table">
+            <thead>
+              <tr>
+                <th>Medicine Name</th>
+                <th>Quantity</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shoppingCart.map((item) => (
+                <tr key={item.medicineName}>
+                  <td>{item.medicineName}</td>
+                  <td>
+                    <form onSubmit={(e) => { e.preventDefault(); handleUpdateQuantity(item.medicineName, e.target.newQuantity.value); }}>
+                      <input type="number" name="newQuantity" defaultValue={item.quantity} />
+                      <button type="submit" className='accept-button'>Update Quantity</button>
+                    </form>
+                  </td>
+                  <td className="action-cell">
+                    <button onClick={() => handleRemoveFromCart(item.medicineName)} className='reject-button'>Remove from Cart</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Link to="/patient/checkout">
+            <button>Continue to Checkout</button>
+          </Link>
+        </React.Fragment>
+      ) : (
+        <p>Your shopping cart is empty. Add items to continue.</p>
       )}
+
 
     </div>
   );

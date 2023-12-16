@@ -64,7 +64,9 @@ const PharmacistHomePage = ({ onLogout }) => {
       <div>
         <Outlet />
       </div>
-      
+      <br></br>
+      <br></br>
+      <br></br>
       <div>
         <LogoutButton onLogout={onLogout} />
       </div>

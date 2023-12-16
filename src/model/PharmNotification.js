@@ -7,6 +7,6 @@ const notificationSchema = new mongoose.Schema({
   },
 });
 
-const Notification = mongoose.model('Notification', notificationSchema);
+const PharmNotification = mongoose.model('PharmNotification', notificationSchema);
 
-module.exports = Notification;
+module.exports = PharmNotification;

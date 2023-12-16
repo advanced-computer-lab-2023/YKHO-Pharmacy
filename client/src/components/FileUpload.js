@@ -40,10 +40,10 @@ const FileUpload = () => {
       <form encType="multipart/form-data">
         <label htmlFor="txtFile">Upload TXT File:</label>
         <input type="file" name="file" id="txtFile" accept=".txt" onChange={handleFileChange} required />
-        <p id="message" className='center-aligned' style={{ color: 'red' }}>{message}</p>
-        <button type="button" onClick={handleFileUpload} disabled={!file} className='accept-button'>
+        <button type="button" onClick={handleFileUpload} disabled={!file} className='center-aligned'>
           Upload
         </button>
+        <p id="message" className='center-aligned' style={{ color: 'red' }}>{message}</p>
       </form>
     </div>
   );
