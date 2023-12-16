@@ -34,6 +34,7 @@ import TotalSalesByMonthAdmin from './components/TotalSalesByMonthAdmin';
 import AlternativeMedicines from './components/AlternativeMedicines';
 import FileUpload from './components/FileUpload';
 import ResultsMed from './components/ResultsMed';
+import ChatPatient from './components/ChatPatient';
 
 const App = () => {
   const [userType, setUserType] = useState(null);
@@ -85,6 +86,7 @@ const App = () => {
              <Route path="checkout" element={<Checkout />} />
              <Route path="fileupload" element={<FileUpload />} />
              <Route path="resultsMed" element={<ResultsMed />} />
+             <Route path="chat" element={<ChatPatient />} />
             </Route>
 
             <Route path="/pharmacist/*" element={userType === 'pharmacist' ? <PharmacistHomePage onLogout={handleLogout} /> : <Navigate to="/" />}>

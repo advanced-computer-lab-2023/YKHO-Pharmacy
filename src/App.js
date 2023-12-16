@@ -303,10 +303,10 @@ app.post('/request-reset', async (req, res) => {
   });
 });
 
-app.use((req, res, next) => {
-  console.log('Session:', req.session);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log('Session:', req.session);
+//   next();
+// });
 
 app.post('/verify-otp', (req, res) => {
   const { otp } = req.body;
@@ -331,9 +331,13 @@ app.post('/verify-otp', (req, res) => {
 // socket.io
 const {Server} = require("socket.io");
 
-const io = new Server(server,{
+let server2 = app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+const io = new Server(server2,{
   cors:{
-    origin: "http://localhost:5173",
+    origin: "http://localhost:3000",
     credentials:true
   }
 });
@@ -365,7 +369,3 @@ app.post("/text", isAuthenticated, send);
 app.post("/read", isAuthenticated, read);
 app.post("/start", isAuthenticated, start);
 app.get("/contacts", isAuthenticated, contacts);
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
