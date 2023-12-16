@@ -14,12 +14,8 @@ const EnterOTPPage = () => {
       const response = await axios.post('http://localhost:8000/verify-otp', { otp }, { withCredentials: true });
       const { userType } = await response.data;
 
-      console.log('Response:', response);
-      // Handle the success response as needed
       navigate(`/resetPassword/${userType}`);
 
-
-      // Clear any previous error message
       setErrorMessage(null);
     } catch (error) {
         if (error.response && error.response.status === 401) {

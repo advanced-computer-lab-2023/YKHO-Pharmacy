@@ -132,19 +132,26 @@ const MedicinesListPatient = () => {
               <td>{medicine.price}</td>
               <td>{medicine.quantity > 0 ? ('In Stock') : ('Out of Stock')}</td>
               <td className="action-cell">
-                {medicine.quantity > 0 ? (
-                  <button type="button" onClick={() => handleAddToCart(medicine)} className='accept-button'>
-                    Add to Cart
-                  </button>
+                {medicine.needPres ? (
+                  <span>Prescription Needed</span>
                 ) : (
-                  <button
-                    onClick={() => onHandleGetAlternatives(medicine.name)}
-                    className='reject-button'
-                  >
-                    View Alternative
-                  </button>
+                  <React.Fragment>
+                    {medicine.quantity > 0 ? (
+                      <button type="button" onClick={() => handleAddToCart(medicine)} className='accept-button'>
+                        Add to Cart
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => onHandleGetAlternatives(medicine.name)}
+                        className='reject-button'
+                      >
+                        View Alternative
+                      </button>
+                    )}
+                  </React.Fragment>
                 )}
               </td>
+
             </tr>
           ))}
         </tbody>

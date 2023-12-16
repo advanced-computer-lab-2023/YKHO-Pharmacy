@@ -32,6 +32,8 @@ import AllSoldMedicinesReport from './components/AllSoldMedicinesReport';
 import TotalSalesByMonth from './components/TotalSalesByMonth';
 import TotalSalesByMonthAdmin from './components/TotalSalesByMonthAdmin';
 import AlternativeMedicines from './components/AlternativeMedicines';
+import FileUpload from './components/FileUpload';
+import ResultsMed from './components/ResultsMed';
 
 const App = () => {
   const [userType, setUserType] = useState(null);
@@ -81,6 +83,8 @@ const App = () => {
              <Route path="alternative/:medicineName" element={<AlternativeMedicines />} />
              <Route path="shoppingCart" element={<ShoppingCart />} />
              <Route path="checkout" element={<Checkout />} />
+             <Route path="fileupload" element={<FileUpload />} />
+             <Route path="resultsMed" element={<ResultsMed />} />
             </Route>
 
             <Route path="/pharmacist/*" element={userType === 'pharmacist' ? <PharmacistHomePage onLogout={handleLogout} /> : <Navigate to="/" />}>

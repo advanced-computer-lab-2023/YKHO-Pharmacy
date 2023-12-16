@@ -51,6 +51,9 @@ const PatientHomePage = ({ onLogout }) => {
         <Link to="/patient/orders" className="home-button">
           View Orders
         </Link>
+        <Link to="/patient/fileupload" className="home-button">
+          Prescriptions Upload
+        </Link>
         <Link to="/patient/chat" className="home-button">
           Chat With Pharmacist
         </Link>
