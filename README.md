@@ -117,8 +117,8 @@ The YKHO-Pharmacy project incorporates the following key features:
 3. **Telemedicine Integration:**
    - Seamless integration for conducting real-time meetings and consultations between pharmacists, patients, and doctors.
 
-4. **Prescription Management:**
-   - Electronic prescription system for doctors to issue and patients to receive prescriptions.
+4. **Prescription Ordering:**
+   - Electronic prescription system for patient to issue and purchase medication.
 
 5. **Follow-up Reminders:**
    - Automated reminders for pharmacists to follow up on medicines that are out of stock.
@@ -127,7 +127,7 @@ The YKHO-Pharmacy project incorporates the following key features:
    - Centralized access to order histories for patients to provide better-informed care.
 
 7. **Medication Ordering:**
-   - User-friendly system for patients to order prescribed medications from the integrated pharmacy.
+   - User-friendly system for patients to order medications from the integrated pharmacy.
 
 8. **Search Functionality:**
    - Efficient search capabilities to help users find specific medicines.
@@ -142,16 +142,16 @@ The YKHO-Pharmacy project incorporates the following key features:
     - Implementation of robust security measures to safeguard patient and medical data.
 
 12. **User Registration:**
-   - An interface to allow users to register to the system.
+    - An interface to allow users to register to the system.
 
 13. **User Login:**
-   - An interface to allow users to login to the system using their credentials. 
+    - An interface to allow users to login to the system using their credentials. 
 
 14. **OTP Password-Reset:**
-   - A secure method to allow users to reset their forgotten passwords using a OTP sent through email.
+    - A secure method to allow users to reset their forgotten passwords using a OTP sent through email.
 
 15. **Pharmacist Panel:**
-   - An interface to manage and administrate the system with stuff related to medicines and patients.
+    - An interface to manage and administrate the system with stuff related to medicines and patients.
 
 These features collectively contribute to creating a comprehensive virtual clinic and pharmacy solution, enhancing the overall healthcare experience for users.
 
