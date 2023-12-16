@@ -359,13 +359,15 @@ io.on('connection', (socket) => {
 
 // chat
 const {chats, send, read, start, save, contacts} = require("./controller/chatController.js");
-
+const {pharmacistChat, pharmacistRead, send,save} =require("./controller/chatPDcontroller.js")
 app.get("/chats", isAuthenticated, chats);
 app.post("/text", isAuthenticated, send);
 app.post("/read", isAuthenticated, read);
 app.post("/start", isAuthenticated, start);
 app.get("/contacts", isAuthenticated, contacts);
+app.get("/chatspd",isAuthenticated,pharmacistChat);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
