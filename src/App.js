@@ -362,10 +362,9 @@ io.on('connection', (socket) => {
 });
 
 // chat
-const {chats, send, read, start, save, contacts} = require("./controller/chatController.js");
+const {chats, send, read, start, save} = require("./controller/chatController.js");
 
 app.get("/chats", isAuthenticated, chats);
 app.post("/text", isAuthenticated, send);
 app.post("/read", isAuthenticated, read);
 app.post("/start", isAuthenticated, start);
-app.get("/contacts", isAuthenticated, contacts);

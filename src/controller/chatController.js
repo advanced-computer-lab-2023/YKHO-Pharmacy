@@ -34,6 +34,11 @@ const chats = async (req,res) => {
     }
     else {
         chats = await chatModel.find({pharmacistID: req.session._id}).populate("patientID");
+        chats = chats.filter((chat) => {
+            if(chat.messages.length > 0)
+                return true;
+            return false;
+        })
         chats = chats.map(({room,patientID,messages}) => ({
             room,
             name: patientID.name,
@@ -102,35 +107,6 @@ const read = async (req,res) => {
     res.status(200).json({chat}); 
 }
 
-const contacts = async (req, res) => {
-    let results = [];
-
-    if (req.session.userType=== "patient") {
-        // Fetch patient-pharmacist chats
-        let chats = await chatModel.find({ patientID: req.session._id }).select({ _id: 0, pharmacistID: 1 });
-        let pharmacists = chats.map(({ pharmacistID }) => String(pharmacistID));
-
-        // Map results for patients
-        results = pharmacists.map((pharmacistID) => ({
-            room: String(req.session._id) + String(pharmacistID),
-            name: pharmacistID.name
-        }));
-    } else {
-        // Fetch pharmacist-patient chats
-        let chats = await chatModel.find({ pharmacistID: req.session._id }).select({ _id: 0, patientID: 1 });
-        let patients = chats.map(({ patientID }) => String(patientID));
-
-        // Map results for pharmacists
-        results = patients.map((patientID) => ({
-            room: String(patientID) + String(req.session._id),
-            name: patientID.name
-        }));
-    }
-
-    res.status(200).json(results);
-};
-
-
 const start = async (req,res) => {
 
     let chat = new chatModel({
@@ -144,4 +120,4 @@ const start = async (req,res) => {
     res.status(200).json(chat);
 }
 
-module.exports = {chats, send, read, start, save, contacts}
+module.exports = {chats, send, read, start, save}

@@ -74,20 +74,6 @@ function ChatPharm() {
             console.log(err);
         })
 
-        // fetch contacts
-        await axios.get("http://localhost:8000/contacts", {
-            withCredentials: true
-        }).then((res) => {
-            let data = res.data;
-            for (let i = 0; i < data.length; i++) {
-                joinRoom(data[i].room)
-            }
-
-            setContacts(data);
-        }
-        ).catch((err) => {
-            console.log(err);
-        })
     }
 
     useEffect(() => {
@@ -252,46 +238,6 @@ function ChatPharm() {
     }
 
 
-
-    const start = async (room) => {
-        let tempContacts = [...contacts];
-        let name;
-        for (let i = 0; i < tempContacts.length; i++) {
-            if (tempContacts[i].room == room) {
-                name = tempContacts.splice(i, 1)[0].name;
-                break;
-            }
-        }
-        setContacts(tempContacts);
-
-        await axios.post("http://localhost:8000/start", {
-            room
-        },
-            { withCredentials: true })
-            .then(function (res) {
-
-                let tempChats = [...chats];
-
-                let chat = {
-                    room: res.data.room,
-                    groups: [],
-                    messages: [],
-                    name,
-                    unread: 0
-                }
-
-                tempChats.push(chat);
-                setChats(tempChats);
-                setIndex(tempChats.length - 1);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        setOpen(false);
-    }
-
-
     return (
         <>
             <Grid container spacing={0} sx={{ minHeight: 'calc(100vh)', minWidth: 'calc(100vw)' }}>
@@ -305,19 +251,12 @@ function ChatPharm() {
                                 py: '8px',
                                 fontSize: 16,
                                 fontWeight: 'medium',
-                                lineHeight: '24px',
+                                lineHeight: '48px',
                                 bgcolor: 'primary.dark',
                                 color: 'primary.contrastText',
                             }}
                         >
                             Chats
-                            <IconButton
-                                size="large"
-                                color="inherit"
-                                onClick={handleOpen}
-                            >
-                                <AddBoxIcon />
-                            </IconButton>
                         </ListSubheader>
                         {
                             chats.length > 0 &&
@@ -394,20 +333,6 @@ function ChatPharm() {
                     }
                 </Grid>
             </Grid>
-            <Dialog onClose={() => { setOpen(false) }} open={open}>
-                <DialogTitle>start chatting</DialogTitle>
-                {contacts.length > 0 &&
-                    <List sx={{ pt: 0 }}>
-                        {contacts.map((contact) => (
-                            <ListItem disableGutters key={contact.room}>
-                                <ListItemButton onClick={() => { start(contact.room) }}>
-                                    <ListItemText primary={contact.name} />
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                }
-            </Dialog>
         </>
     );
 }
