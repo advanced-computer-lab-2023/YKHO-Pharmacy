@@ -11,6 +11,15 @@ const PatientHomePage = ({ onLogout }) => {
   useEffect(() => {
     const fetchWalletData = async () => {
       try {
+        await axios.get("http://localhost:8000/start", {
+            withCredentials: true
+        }).then((res) => {
+            console.log(res.data)
+        }
+        ).catch((err) => {
+            console.log(err);
+        })
+
         const response = await axios.get('http://localhost:8000/patient/wallet', {
           withCredentials: true,
         });

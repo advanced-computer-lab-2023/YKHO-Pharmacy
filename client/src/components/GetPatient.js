@@ -53,6 +53,9 @@ const GetPatient = () => {
       const response = await axios.post('http://localhost:8000/admin/removePatient', { name }, { withCredentials: true });
       const data = response.data;
 
+      // Clear the input field
+      setName('');
+      
       // Display the removal message
       setMessage(data.message);
 
@@ -86,13 +89,13 @@ const GetPatient = () => {
           <p><strong>Username:</strong> {patientData.username}</p>
           <p><strong>Name:</strong> {patientData.name}</p>
           <p><strong>Email:</strong> {patientData.email}</p>
-          <p><strong>Date of birth:</strong> {formatDate(patientData.dateOfBirth)}</p>
+          <p><strong>Date of birth:</strong> {formatDate(patientData.DOB)}</p>
           <p><strong>Gender:</strong> {patientData.gender}</p>
           <p><strong>Mobile Number:</strong> {patientData.mobileNumber}</p>
           <h3>Emergency Contact</h3>
-          <p><strong>Full Name:</strong> {patientData.emergencyContact.fullName}</p>
-          <p><strong>Mobile Number:</strong> {patientData.emergencyContact.mobileNumber}</p>
-          <p><strong>Relation:</strong> {patientData.emergencyContact.relation}</p>
+          <p><strong>Full Name:</strong> {patientData.emergency.name}</p>
+          <p><strong>Mobile Number:</strong> {patientData.emergency.mobile}</p>
+          <p><strong>Relation:</strong> {patientData.emergency.relation}</p>
           <button onClick={handleRemove} className='reject-button'>Remove Patient</button>
         </div>
       )}

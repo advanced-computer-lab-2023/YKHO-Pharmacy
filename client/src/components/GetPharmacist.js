@@ -53,6 +53,9 @@ const GetPharmacist = () => {
       const response = await axios.post('http://localhost:8000/admin/removePharmacist', { name }, { withCredentials: true });
       const data = response.data;
 
+      // Clear the input field
+      setName('');
+      
       // Display the removal message
       setMessage(data.message);
 

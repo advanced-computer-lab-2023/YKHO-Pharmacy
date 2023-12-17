@@ -108,14 +108,20 @@ const read = async (req,res) => {
 }
 
 const start = async (req,res) => {
-
-    let chat = new chatModel({
-        room: req.body.room,
-        patientID: req.body.room.substring(0,24),
-        pharmacistID: req.body.room.substring(24,48)
-    })
-
-    chat = await chat.save();
+    console.log(req.session);
+    let room = req.session._id + "000000000000000000000000";
+    let chat = await chatModel.findOne({room});
+    console.log(chat);
+    if(chat == null)
+    {
+        chat = new chatModel({
+            room: room,
+            patientID: req.session._id,
+            pharmacistID: "000000000000000000000000"
+        })
+    
+        chat = await chat.save();
+    }
 
     res.status(200).json(chat);
 }

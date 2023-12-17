@@ -81,6 +81,7 @@ const RegisterPage = ({ onRegister }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
           <label htmlFor="password">Password:</label>
           <input
@@ -89,8 +90,8 @@ const RegisterPage = ({ onRegister }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
-          {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
           <label htmlFor="name">Name:</label>
           <input
             type="text"
@@ -98,6 +99,7 @@ const RegisterPage = ({ onRegister }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
           <label htmlFor="email">Email:</label>
           <input
@@ -106,6 +108,7 @@ const RegisterPage = ({ onRegister }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
           <label htmlFor="dateOfBirth">Date of Birth:</label>
           <input
@@ -114,6 +117,7 @@ const RegisterPage = ({ onRegister }) => {
             value={dateOfBirth}
             onChange={(e) => setDateOfBirth(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
           <label htmlFor="gender">Gender:</label>
           <select
@@ -132,6 +136,7 @@ const RegisterPage = ({ onRegister }) => {
             value={mobileNumber}
             onChange={(e) => setMobileNumber(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
         <h2>Emergency Contact</h2>
           <label htmlFor="emergencyName">Full Name:</label>
@@ -141,6 +146,7 @@ const RegisterPage = ({ onRegister }) => {
             value={emergencyName}
             onChange={(e) => setEmergencyName(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
           <label htmlFor="emergencyMobile">Mobile Number:</label>
           <input
@@ -149,6 +155,7 @@ const RegisterPage = ({ onRegister }) => {
             value={emergencyMobile}
             onChange={(e) => setEmergencyMobile(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
           <label htmlFor="emergencyRelation">Relation to the Patient:</label>
           <input
@@ -157,7 +164,9 @@ const RegisterPage = ({ onRegister }) => {
             value={emergencyRelation}
             onChange={(e) => setEmergencyRelation(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
+          {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
           {registrationError && <p style={{ color: 'red' }}>{registrationError}</p>}
           <button type="submit">Register</button>
           <br></br>

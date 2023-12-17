@@ -9,22 +9,28 @@ const ResetPassword = () => {
   const { userType } = useParams(); // Get userType from the URL params
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [isValidPassword, setIsValidPassword] = useState(false);
   const navigate = useNavigate();
 
   // Function to handle input change
   const handleInputChange = (e) => {
     const newPasswordValue = e.target.value;
     setNewPassword(newPasswordValue);
+  };
 
-    // Check password validity
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$%^&*])/;
-    setIsValidPassword(regex.test(newPasswordValue));
+  const isValidPassword = (newPassword) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/;
+    return regex.test(newPassword);
   };
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate password
+    if (!isValidPassword(newPassword)) {
+      setMessage('Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol.');
+      return;
+    }
 
     try {
       // Make a POST request to reset the password
@@ -45,13 +51,7 @@ const ResetPassword = () => {
 
   return (
     <div className='center-aligned'>
-      <h1>Reset Password</h1>
-
-      {message && (
-        <div className={message.type}>
-          {message.text}
-        </div>
-      )}
+      <h1 className="header-text">Reset Password</h1>
 
       <form onSubmit={handleSubmit}>
         <label htmlFor="newPassword">New Password:</label>
@@ -62,11 +62,13 @@ const ResetPassword = () => {
           value={newPassword}
           onChange={handleInputChange}
           required
-        />
+          style={{ width: '260px' }}
+          />
 
-        <div style={{ color: 'red', display: isValidPassword ? 'none' : 'block' }}>
-          Password must contain at least 1 uppercase letter, 1 lowercase letter, no spaces, and at least 1 special symbol.
+        <div>
+          {message && <p style={{ color: 'red' }}>{message}</p>}
         </div>
+        
         <br></br>
         <button type="submit" disabled={!isValidPassword}>
           Reset

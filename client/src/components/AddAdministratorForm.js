@@ -61,8 +61,8 @@ const AddAdministratorForm = () => {
   };
 
   return (
-    <div>
-      <h1>Add Administrator</h1>
+    <div className="center-aligned">
+      <h1 className="header-text">Add Administrator</h1>
       <form onSubmit={handleAddAdministrator}>
         <label>
           Username:

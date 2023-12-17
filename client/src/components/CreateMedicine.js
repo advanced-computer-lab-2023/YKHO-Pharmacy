@@ -32,14 +32,9 @@ const CreateMedicine = () => {
       // Make a POST request to create a new medicine
       await axios.post('http://localhost:8000/pharmacist/createMedicines', formData, {withCredentials: true});
     
-      // Check if the response contains a message
-      console.log('Medicine created successfully');
       navigate("/pharmacist/medicines");
       
     } catch (error) {
-        if (error.response && error.response.status === 404 )
-            setMessage('Medicine with the same name already exists');
-        
         console.error('Error creating medicine:', error.message);
       // You may want to handle errors, e.g., displaying an error message
     }
@@ -109,17 +104,6 @@ const CreateMedicine = () => {
           onChange={handleChange}
           required
           /><br />
-
-        <label htmlFor="sales">Sales:</label>
-        <input
-          type="number"
-          id="sales"
-          name="sales"
-          min="0"
-          value={formData.sales}
-          onChange={handleChange}
-          required
-        /><br />
 
         <label htmlFor="price">Price:</label>
         <input

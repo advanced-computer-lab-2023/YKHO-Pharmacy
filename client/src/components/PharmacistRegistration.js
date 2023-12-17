@@ -73,8 +73,8 @@ const PharmacistRegistration = () => {
   };
 
   return (
-    <div>
-      <h2 class="center-aligned">Pharmacist Registration</h2>
+    <div className="center-aligned">
+      <h2 className="header-text">Pharmacist Registration</h2>
       <form onSubmit={handleRegister} encType="multipart/form-data">
           <label htmlFor="username">Username:</label>
           <input
@@ -83,6 +83,7 @@ const PharmacistRegistration = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
           <label htmlFor="password">Password:</label>
           <input
@@ -91,8 +92,8 @@ const PharmacistRegistration = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
-          {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
           <label htmlFor="name">Name:</label>
           <input
             type="text"
@@ -100,6 +101,7 @@ const PharmacistRegistration = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
           <label htmlFor="email">Email:</label>
           <input
@@ -108,6 +110,7 @@ const PharmacistRegistration = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
           <label htmlFor="dateOfBirth">Date of Birth:</label>
           <input
@@ -116,6 +119,7 @@ const PharmacistRegistration = () => {
             value={dateOfBirth}
             onChange={(e) => setDateOfBirth(e.target.value)}
             required
+            style={{ width: '280px' }}
           />
         
         <label htmlFor="hourlyRate">Hourly Rate:</label>
@@ -125,6 +129,7 @@ const PharmacistRegistration = () => {
           value={hourlyRate}
           onChange={(e) => setHourlyRate(e.target.value)}
           required
+          style={{ width: '280px' }}
         />
         <label htmlFor="affiliation">Affiliation:</label>
         <input
@@ -133,6 +138,7 @@ const PharmacistRegistration = () => {
           value={affiliation}
           onChange={(e) => setAffiliation(e.target.value)}
           required
+          style={{ width: '280px' }}
         />
         <label htmlFor="educationalBackground">Educational Background:</label>
         <input
@@ -141,6 +147,7 @@ const PharmacistRegistration = () => {
           value={educationalBackground}
           onChange={(e) => setEducationalBackground(e.target.value)}
           required
+          style={{ width: '280px' }}
         />
         <label htmlFor="idFile">ID File:</label>
         <input
@@ -149,6 +156,7 @@ const PharmacistRegistration = () => {
           onChange={(e) => setIdFile(e.target.files[0])}
           accept=".pdf, .doc, .docx"
           required
+          style={{ width: '280px' }}
         />
         <label htmlFor="medicalDegreeFile">Medical Degree File:</label>
         <input
@@ -157,6 +165,7 @@ const PharmacistRegistration = () => {
           onChange={(e) => setMedicalDegreeFile(e.target.files[0])}
           accept=".pdf, .doc, .docx"
           required
+          style={{ width: '280px' }}
         />
         <label htmlFor="workingLicenseFile">Working License File:</label>
         <input
@@ -165,7 +174,9 @@ const PharmacistRegistration = () => {
           onChange={(e) => setWorkingLicenseFile(e.target.files[0])}
           accept=".pdf, .doc, .docx"
           required
+          style={{ width: '280px' }}
         />
+        {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
         {registrationError && <p style={{ color: 'red' }}>{registrationError}</p>}
         <button type="submit">Submit Request</button>
         <br></br>

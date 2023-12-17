@@ -30,7 +30,6 @@ exports.addAdministrator = async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
-    console.log(req.session.user.username);
     // Check if username already exists
     const existingAdministrator = await Administrator.findOne({ username });
     if (existingAdministrator) {
@@ -40,7 +39,7 @@ exports.addAdministrator = async (req, res) => {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newAdministrator = new Administrator({ username, hashedPassword, email });
+    const newAdministrator = new Administrator({ username, password: hashedPassword, email });
     await newAdministrator.save();
 
     res.status(201).json({ message: 'Administrator added successfully' });

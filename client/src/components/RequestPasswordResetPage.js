@@ -14,6 +14,7 @@ const RequestPasswordResetPage = () => {
       
       try {
       setLoading(true);
+      setMessage('');
       
       const response = await axios.post('http://localhost:8000/request-reset', { email }, {withCredentials: true});
       const data = response.data;
@@ -36,11 +37,6 @@ const RequestPasswordResetPage = () => {
     <div>
       <h1>Request Password Reset</h1>
 
-      {message && (
-        <div className={message.type}>
-          {message.text}
-        </div>
-      )}
 
       <form onSubmit={handleFormSubmit}>
         <label htmlFor="email">Email Address:</label>
@@ -51,7 +47,14 @@ const RequestPasswordResetPage = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-        />
+          />
+          
+          {message && (
+            <div style = {{color:'red'}} className='center-aligned'>
+              {message.text}
+            </div>
+          )}
+          <br></br>
         
         <button type="submit" disabled={loading}>
           {loading ? 'Requesting...' : 'Request Reset'}

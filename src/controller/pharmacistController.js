@@ -35,31 +35,55 @@ exports.createMedicine = async (req, res) => {
     let existingMedicine = await Medicine.findOne({ name });
 
     if (existingMedicine) {
-      return res.status(404).json({
-        message: 'Medicine with the same name already exists',
+      const newQuantity = parseInt(existingMedicine.quantity, 10) + parseInt(quantity, 10);
+    
+      // Update the existing medicine in the database
+      await Medicine.findOneAndUpdate(
+        { name },
+        {
+          image,
+          name,
+          dosage,
+          description,
+          medUse,
+          detail,
+          quantity: newQuantity,
+          sales,
+          price,
+          needPres,
+        },
+        { new: true } // This option returns the modified document
+      );
+    
+      // Fetch the updated medicine after the update
+      existingMedicine = await Medicine.findOne({ name });
+    
+      res.status(200).json({
+        message: 'Medicine updated successfully',
         medicine: existingMedicine,
+      });
+    }else
+    {
+      const newMedicine = new Medicine({
+        image,
+        name,
+        dosage,
+        description,
+        medUse,
+        detail,
+        quantity,
+        sales,
+        price,
+        needPres: prescriptionRequired,
+      });
+  
+      await newMedicine.save();
+      res.status(201).json({
+        message: 'Medicine added successfully',
+        medicine: newMedicine,
       });
     }
 
-    const newMedicine = new Medicine({
-      image,
-      name,
-      dosage,
-      description,
-      medUse,
-      detail,
-      quantity,
-      sales,
-      price,
-      needPres: prescriptionRequired,
-    });
-
-    await newMedicine.save();
-
-    res.status(201).json({
-      message: 'Medicine added successfully',
-      medicine: newMedicine,
-    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

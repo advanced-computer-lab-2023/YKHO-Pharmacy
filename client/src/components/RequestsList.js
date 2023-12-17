@@ -50,7 +50,6 @@ const RequestsList = () => {
             <th>Username</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Password</th>
             <th>Date of Birth</th>
             <th>Hourly Rate</th>
             <th>Affiliation</th>
@@ -119,6 +118,11 @@ const handleReject = async (e, requestId) => {
     }
   };
   
+   // Function to format date in "day/month/year" format
+   const formatDate = (dateString) => {
+    const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
 // Function to render table rows based on requests data
 const renderTableRows = (requests) => {
@@ -127,8 +131,7 @@ const renderTableRows = (requests) => {
       <td>{regRequest.username}</td>
       <td>{regRequest.name}</td>
       <td>{regRequest.email}</td>
-      <td>{regRequest.password}</td>
-      <td>{regRequest.dateOfBirth}</td>
+      <td>{formatDate(regRequest.dateOfBirth)}</td>
       <td>{regRequest.hourlyRate}</td>
       <td>{regRequest.affiliation}</td>
       <td>{regRequest.educationalBackground}</td>

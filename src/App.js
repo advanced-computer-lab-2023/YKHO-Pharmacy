@@ -356,6 +356,11 @@ io.on('connection', (socket) => {
     save(data);
   })
 
+  socket.on("send_message_pharmacist", (data) => {
+    socket.emit("receive_message_pharmacist", data);
+    pharmacistSave(data);    
+  })
+
   socket.on("disconnect", (data) => {
     console.log("disconnected", socket.id)
   })
@@ -367,4 +372,8 @@ const {chats, send, read, start, save} = require("./controller/chatController.js
 app.get("/chats", isAuthenticated, chats);
 app.post("/text", isAuthenticated, send);
 app.post("/read", isAuthenticated, read);
-app.post("/start", isAuthenticated, start);
+app.get("/start", isAuthenticated, start);
+
+const { pharmacistChat, pharmacistRead, pharmacistSave } = require("./controller/pharmacistChatController.js")
+app.get("/pharmacistChat",isAuthenticated,pharmacistChat );
+app.get("/pharmacistRead",isAuthenticated,pharmacistRead );

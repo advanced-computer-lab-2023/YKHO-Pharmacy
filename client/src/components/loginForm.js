@@ -62,7 +62,7 @@ const LoginForm = ({ onLogin }) => {
         />
       </div>
       <button type="submit">Login</button>
-      {loginError && <p>{loginError}</p>}
+      {loginError && <p style = {{color:'red'}}>{loginError}</p>}
       <p>
         Don't have an account? <Link to="/register">Register</Link>
       </p>

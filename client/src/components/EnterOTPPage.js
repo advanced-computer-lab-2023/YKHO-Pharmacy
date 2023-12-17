@@ -29,8 +29,8 @@ const EnterOTPPage = () => {
   };
 
   return (
-    <div>
-      <h1>Enter OTP</h1>
+    <div className='center-aligned'>
+      <h1 className="header-text">Enter OTP</h1>
 
       <form onSubmit={handleFormSubmit}>
         <label htmlFor="otp">OTP:</label>
