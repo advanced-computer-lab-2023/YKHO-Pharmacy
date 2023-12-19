@@ -17,7 +17,6 @@ const familyMemberSchema = {
         type: mongoose.Schema.Types.ObjectId,
         required: false,
         ref: 'Patient',
-        unique: true,
     },
     name: {
         type: String,

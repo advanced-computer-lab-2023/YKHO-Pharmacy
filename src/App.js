@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 // Use cors middleware
 app.use(cors({ 
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:3001',
   credentials: true,
 }));
 
@@ -337,7 +337,7 @@ let server2 = app.listen(port, () => {
 
 const io = new Server(server2,{
   cors:{
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3001",
     credentials:true
   }
 });
