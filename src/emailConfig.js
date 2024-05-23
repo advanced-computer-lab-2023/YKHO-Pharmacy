@@ -5,7 +5,7 @@ const transport = nodemailer.createTransport({
   service: 'Hotmail', // e.g., 'Gmail'
   auth: {
     user: 'yoyo_ah360@hotmail.com',
-    pass: '13EBDAEE47',
+    pass: 'password',
   },
 });
 
