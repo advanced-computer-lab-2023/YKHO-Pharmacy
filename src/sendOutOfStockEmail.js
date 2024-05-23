@@ -6,7 +6,7 @@ module.exports = async (pharmacistEmail, medicineName) => {
       service: 'Hotmail',
       auth: {
         user: 'yoyo_ah360@hotmail.com',
-        pass: '13EBDAEE47',
+        pass: 'password',
       },
     });
 
